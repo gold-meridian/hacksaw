@@ -5,6 +5,8 @@ VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tomat.Hacksaw", "Tomat.Hacksaw\Tomat.Hacksaw.csproj", "{90F827A1-4AC0-480A-A1F4-05DD7CC1EFD8}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tomat.Hacksaw.CLI", "Tomat.Hacksaw.CLI\Tomat.Hacksaw.CLI.csproj", "{37C55FDB-DC62-4DA4-A01A-DFF02F7E10B6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -18,5 +20,9 @@ Global
 		{90F827A1-4AC0-480A-A1F4-05DD7CC1EFD8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{90F827A1-4AC0-480A-A1F4-05DD7CC1EFD8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{90F827A1-4AC0-480A-A1F4-05DD7CC1EFD8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{37C55FDB-DC62-4DA4-A01A-DFF02F7E10B6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{37C55FDB-DC62-4DA4-A01A-DFF02F7E10B6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{37C55FDB-DC62-4DA4-A01A-DFF02F7E10B6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{37C55FDB-DC62-4DA4-A01A-DFF02F7E10B6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
