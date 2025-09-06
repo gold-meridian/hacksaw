@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Linq;
+using System.Text;
 
 using Tomat.Hacksaw.IO;
 using Tomat.Hacksaw.Metadata.Image.Pooling;
@@ -129,7 +130,7 @@ public readonly struct HlImage
 
     private static IPool<StringHandle, string> ReadStrings(HlByteReader reader, uint stringCount)
     {
-        return new HashPool<StringHandle, string>([]);
+        return new HashPool<StringHandle, string>(ReadStringBlock(reader, stringCount));
     }
 
     private static IPool<ByteHandle, ByteCollection> ReadBytes(HlByteReader reader, uint byteCount)
@@ -165,5 +166,30 @@ public readonly struct HlImage
     private static IPool<ConstantHandle, object> ReadConstants(HlByteReader reader, uint constantCount)
     {
         return new HashPool<ConstantHandle, object>([]);
+    }
+
+    private static string[] ReadStringBlock(HlByteReader reader, uint stringCount)
+    {
+        var sizeInBytes = reader.ReadInt32();
+
+        var stringBytes = sizeInBytes < 1024 ? stackalloc byte[sizeInBytes] : new byte[sizeInBytes];
+        if (reader.ReadBytes(stringBytes) != sizeInBytes)
+        {
+            throw new InvalidDataException($"Could not read string block; not enough bytes for size: {sizeInBytes}");
+        }
+
+        var strings = new string[stringCount];
+
+        var offset = 0;
+        for (var i = 0; i < stringCount; i++)
+        {
+            var stringSize = reader.ReadUIndex();
+            strings[i] = Encoding.UTF8.GetString(stringBytes.Slice(offset, (int)stringSize));
+
+            // Account for the null terminator character.
+            offset += (int)stringSize + 1;
+        }
+
+        return strings;
     }
 }
