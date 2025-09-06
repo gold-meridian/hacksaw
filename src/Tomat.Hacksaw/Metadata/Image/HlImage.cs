@@ -1,6 +1,5 @@
 using System;
 using System.IO;
-using System.Linq;
 using System.Text;
 
 using Tomat.Hacksaw.IO;
@@ -79,7 +78,7 @@ public readonly struct HlImage
         var intPool = ReadInts(reader, intCount);
         var floatPool = ReadFloats(reader, floatCount);
         var stringPool = ReadStrings(reader, stringCount);
-        var bytePool = ReadBytes(reader, byteCount);
+        var bytePool = ReadBytes(reader, byteCount, version >= HlVersion.FEATURE_BYTES);
         var debugFilePool = ReadDebugFiles(reader, flags.HasFlag(HlFlags.Debug));
         var typePool = ReadTypes(reader, typeCount);
         var globalPool = ReadGlobals(reader, globalCount);
@@ -133,8 +132,40 @@ public readonly struct HlImage
         return new HashPool<StringHandle, string>(ReadStringBlock(reader, stringCount));
     }
 
-    private static IPool<ByteHandle, ByteCollection> ReadBytes(HlByteReader reader, uint byteCount)
+    private static IPool<ByteHandle, ByteCollection> ReadBytes(HlByteReader reader, uint byteCount, bool readBytes)
     {
+        if (!readBytes)
+        {
+            return new HashPool<ByteHandle, ByteCollection>([]);
+        }
+
+        var bytesSize = reader.ReadInt32();
+        var bytes = new byte[bytesSize];
+        if (reader.ReadBytes(bytes) != bytesSize)
+        {
+            throw new InvalidDataException($"Could not read bytes section (expected {bytesSize})");
+        }
+
+        /*var startPositions = new uint[byteCount];
+        for (var i = 0; i < byteCount; i++)
+        {
+            startPositions[i] = reader.ReadUIndex();
+        }*/
+
+        var byteCollections = new ByteCollection[byteCount];
+        for (var i = 0; i < byteCount; i++)
+        {
+            var start = reader.ReadUIndex();
+            var length = 0;
+
+            while (bytes[start + length] != 0)
+            {
+                length++;
+            }
+
+            byteCollections[i] = new ByteCollection(bytes.AsMemory((int)start, length));
+        }
+
         return new HashPool<ByteHandle, ByteCollection>([]);
     }
 
