@@ -171,7 +171,13 @@ public readonly struct HlImage
 
     private static IPool<DebugFileHandle, string> ReadDebugFiles(HlByteReader reader, bool hasFlag)
     {
-        return new HashPool<DebugFileHandle, string>([]);
+        if (!hasFlag)
+        {
+            return new HashPool<DebugFileHandle, string>([]);
+        }
+        
+        var debugCount = reader.ReadUIndex();
+        return new HashPool<DebugFileHandle, string>(ReadStringBlock(reader, debugCount));
     }
 
     private static IPool<TypeHandle, object> ReadTypes(HlByteReader reader, uint typeCount)
