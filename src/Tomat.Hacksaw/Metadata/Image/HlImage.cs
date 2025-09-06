@@ -17,6 +17,8 @@ public readonly struct HlImage
 
     public required HlFlags Flags { get; init; }
 
+    public bool HasDebug => Flags.HasFlag(HlFlags.Debug);
+
     // int[]
     // float[]
     // string[]
@@ -49,6 +51,16 @@ public readonly struct HlImage
         var version = HlVersion.Read(reader);
 
         var flags = (HlFlags)reader.ReadUIndex();
+        var intCount = reader.ReadUIndex();
+        var floatCount = reader.ReadUIndex();
+        var stringCount = reader.ReadUIndex();
+        var byteCount = version >= HlVersion.FEATURE_BYTES ? reader.ReadUIndex() : 0;
+        var typeCount = reader.ReadUIndex();
+        var globalCount = reader.ReadUIndex();
+        var nativeCount = reader.ReadUIndex();
+        var functionCount = reader.ReadUIndex();
+        var constantCount = reader.ReadUIndex();
+        var entryPoint = reader.ReadUIndex();
 
         return new HlImage
         {

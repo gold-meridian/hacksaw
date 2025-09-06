@@ -7,6 +7,7 @@ namespace Tomat.Hacksaw.Metadata;
 [ValueObject<int>]
 [Instance("MIN_VERSION", min_version)]
 [Instance("MAX_VERSION", max_version)]
+[Instance("FEATURE_BYTES", 5)]
 public readonly partial record struct HlVersion
 {
     private const int min_version = 2;
