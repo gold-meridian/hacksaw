@@ -167,6 +167,45 @@ public readonly partial record struct ByteHandle : IHandle<ByteHandle>
 }
 
 [ValueObject<int>]
+public readonly partial record struct DebugFileHandle : IHandle<DebugFileHandle>
+{
+    public static bool operator <(DebugFileHandle left, DebugFileHandle right)
+    {
+        return left.CompareTo(right) < 0;
+    }
+
+    public static bool operator <=(DebugFileHandle left, DebugFileHandle right)
+    {
+        return left.CompareTo(right) <= 0;
+    }
+
+    public static bool operator >(DebugFileHandle left, DebugFileHandle right)
+    {
+        return left.CompareTo(right) > 0;
+    }
+
+    public static bool operator >=(DebugFileHandle left, DebugFileHandle right)
+    {
+        return left.CompareTo(right) >= 0;
+    }
+
+    private static int NormalizeInput(int input)
+    {
+        return input;
+    }
+
+    private static Validation Validate(int input)
+    {
+        return input >= 0 ? Validation.Ok : Validation.Invalid("Handle cannot reference negative element");
+    }
+
+    public static DebugFileHandle DangerouslyCreateHandleForPool(int value)
+    {
+        return From(value);
+    }
+}
+
+[ValueObject<int>]
 public readonly partial record struct TypeHandle : IHandle<TypeHandle>
 {
     public static bool operator <(TypeHandle left, TypeHandle right)
