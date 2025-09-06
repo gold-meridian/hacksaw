@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 
 using Tomat.Hacksaw.IO;
+using Tomat.Hacksaw.Metadata.Image.Pooling;
 
 namespace Tomat.Hacksaw.Metadata.Image;
 
@@ -19,15 +20,23 @@ public readonly struct HlImage
 
     public bool HasDebug => Flags.HasFlag(HlFlags.Debug);
 
-    // int[]
-    // float[]
-    // string[]
-    // byte[][]
-    // type[]
-    // global[]
-    // native[]
-    // function[]
-    // constant[]
+    public IPool<IntHandle, int> IntPool { get; } = null!;
+
+    public IPool<FloatHandle, double> FloatPool { get; } = null!;
+
+    public IPool<StringHandle, string> StringPool { get; } = null!;
+
+    public IPool<ByteHandle, ByteCollection> BytePool { get; } = null!;
+
+    public IPool<TypeHandle, object> TypePool { get; } = null!; // TODO: HlType
+
+    public IPool<GlobalHandle, object> GlobalPool { get; } = null!; // TODO: HlGlobal
+
+    public IPool<NativeHandle, object> NativePool { get; } = null!; // TODO: HlNative
+
+    public IPool<FunctionHandle, object> FunctionPool { get; } = null!; // TODO: HlFunction
+
+    public IPool<ConstantHandle, object> ConstantPool { get; } = null!; // TODO: HlConstant
 
     public static HlImage Read(Stream stream)
     {
