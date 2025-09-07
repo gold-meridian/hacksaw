@@ -1,6 +1,4 @@
-using Tomat.Hacksaw.Metadata.Image;
-
-namespace Tomat.Hacksaw.Metadata;
+namespace Tomat.Hacksaw.Metadata.Image;
 
 /// <summary>
 ///     A read-only HashLink type definition to be used in a
