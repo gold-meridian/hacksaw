@@ -30,11 +30,11 @@ public readonly struct HlImage
 
     public required IPool<DebugFileHandle, string> DebugFilePool { get; init; }
 
-    public required IPool<TypeHandle, object> TypePool { get; init; } // TODO: HlType
+    public required IPool<TypeHandle, IReadOnlyHlType> TypePool { get; init; }
 
-    public required IPool<GlobalHandle, object> GlobalPool { get; init; } // TODO: HlGlobal
+    public required IPool<GlobalHandle, ImageGlobal> GlobalPool { get; init; }
 
-    public required IPool<NativeHandle, object> NativePool { get; init; } // TODO: HlNative
+    public required IPool<NativeHandle, ImageNative> NativePool { get; init; }
 
     public required IPool<FunctionHandle, object> FunctionPool { get; init; } // TODO: HlFunction
 
@@ -53,12 +53,12 @@ public readonly struct HlImage
         return Read(new HlByteReader(reader));
     }
 
-    public static unsafe HlImage Read(HlByteReader reader)
+    public static HlImage Read(HlByteReader reader)
     {
         var header = HlHeader.Read(reader, HlHeader.HLB);
         if (header != HlHeader.HLB)
         {
-            throw new InvalidDataException($"Expected header: 'HLB'");
+            throw new InvalidDataException("Expected header: 'HLB'");
         }
 
         var version = HlVersion.Read(reader);
@@ -175,24 +175,47 @@ public readonly struct HlImage
         {
             return new HashPool<DebugFileHandle, string>([]);
         }
-        
+
         var debugCount = reader.ReadUIndex();
         return new HashPool<DebugFileHandle, string>(ReadStringBlock(reader, debugCount));
     }
 
-    private static IPool<TypeHandle, object> ReadTypes(HlByteReader reader, uint typeCount)
+    private static IPool<TypeHandle, IReadOnlyHlType> ReadTypes(HlByteReader reader, uint typeCount)
     {
-        return new HashPool<TypeHandle, object>([]);
+        var types = new IReadOnlyHlType[typeCount];
+        for (var i = 0; i < typeCount; i++)
+        {
+            types[i] = ReadType(reader);
+        }
+
+        return new HashPool<TypeHandle, IReadOnlyHlType>(types);
     }
 
-    private static IPool<GlobalHandle, object> ReadGlobals(HlByteReader reader, uint globalCount)
+    private static IPool<GlobalHandle, ImageGlobal> ReadGlobals(HlByteReader reader, uint globalCount)
     {
-        return new HashPool<GlobalHandle, object>([]);
+        var globals = new ImageGlobal[globalCount];
+        for (var i = 0; i < globalCount; i++)
+        {
+            globals[i] = ImageGlobal.From(FunctionHandle.From(reader.ReadIndex()));
+        }
+
+        return new HashPool<GlobalHandle, ImageGlobal>(globals);
     }
 
-    private static IPool<NativeHandle, object> ReadNatives(HlByteReader reader, uint nativeCount)
+    private static IPool<NativeHandle, ImageNative> ReadNatives(HlByteReader reader, uint nativeCount)
     {
-        return new HashPool<NativeHandle, object>([]);
+        var natives = new ImageNative[nativeCount];
+        for (var i = 0; i < nativeCount; i++)
+        {
+            natives[i] = new ImageNative(
+                LibraryName: StringHandle.From(reader.ReadIndex()),
+                FunctionName: StringHandle.From(reader.ReadIndex()),
+                Type: TypeHandle.From(reader.ReadIndex()),
+                NativeIndex: reader.ReadUIndex()
+            );
+        }
+
+        return new HashPool<NativeHandle, ImageNative>(natives);
     }
 
     private static IPool<FunctionHandle, object> ReadFunctions(HlByteReader reader, uint functionCount)
@@ -228,5 +251,66 @@ public readonly struct HlImage
         }
 
         return strings;
+    }
+
+    private static IReadOnlyHlType ReadType(HlByteReader reader)
+    {
+        var kind = (HlTypeKind)reader.ReadByte();
+
+        switch (kind)
+        {
+            case HlTypeKind.Fun:
+            case HlTypeKind.Method:
+            {
+                return null!;
+            }
+
+            case HlTypeKind.Obj:
+            case HlTypeKind.Struct:
+            {
+                return null!;
+            }
+
+            case HlTypeKind.Ref:
+            {
+                return null!;
+            }
+
+            case HlTypeKind.Virtual:
+            {
+                return null!;
+            }
+
+            case HlTypeKind.Abstract:
+            {
+                return null!;
+            }
+
+            case HlTypeKind.Enum:
+            {
+                return null!;
+            }
+
+            case HlTypeKind.Null:
+            case HlTypeKind.Packed:
+            {
+                return null!;
+            }
+
+            case HlTypeKind.Guid:
+            {
+                throw new NotImplementedException("GUID type reading not yet implemented, can probably be a fall-through");
+            }
+
+            default:
+            {
+                if (kind >= HlTypeKind.Last)
+                {
+                    throw new InvalidDataException($"Invalid type kind: : {kind}");
+                }
+
+                return null!;
+            }
+        }
     }
 }

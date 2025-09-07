@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tomat.Hacksaw", "Tomat.Hack
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tomat.Hacksaw.CLI", "Tomat.Hacksaw.CLI\Tomat.Hacksaw.CLI.csproj", "{37C55FDB-DC62-4DA4-A01A-DFF02F7E10B6}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tomat.Hacksaw.OpcodeGenerator", "Tomat.Hacksaw.OpcodeGenerator\Tomat.Hacksaw.OpcodeGenerator.csproj", "{028EB142-AEDE-4C80-9AF9-3AFDCB5078CA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -24,5 +26,9 @@ Global
 		{37C55FDB-DC62-4DA4-A01A-DFF02F7E10B6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{37C55FDB-DC62-4DA4-A01A-DFF02F7E10B6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{37C55FDB-DC62-4DA4-A01A-DFF02F7E10B6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{028EB142-AEDE-4C80-9AF9-3AFDCB5078CA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{028EB142-AEDE-4C80-9AF9-3AFDCB5078CA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{028EB142-AEDE-4C80-9AF9-3AFDCB5078CA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{028EB142-AEDE-4C80-9AF9-3AFDCB5078CA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

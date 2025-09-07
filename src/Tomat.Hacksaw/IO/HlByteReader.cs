@@ -1,8 +1,6 @@
 using System;
 using System.IO;
 
-using Tomat.Hacksaw.Metadata;
-
 namespace Tomat.Hacksaw.IO;
 
 // Wrapping BinaryReader is a little useless, but it's somewhat convenient.
