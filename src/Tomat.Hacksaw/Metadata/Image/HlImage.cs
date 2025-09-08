@@ -519,27 +519,44 @@ public readonly struct HlImage
                         var p1 = reader.ReadIndex();
                         var p2 = reader.ReadIndex();
                         var p3 = (int)reader.ReadByte();
-                        var extraParams = new int[p3];
+                        var parameters = (Span<int>)stackalloc int[p3 + 4];
+                        {
+                            parameters[0] = (int)kind;
+                            parameters[1] = p1;
+                            parameters[2] = p2;
+                            parameters[3] = p3;
+                        }
+                        
                         for (var i = 0; i < p3; i++)
                         {
-                            extraParams[i] = reader.ReadIndex();
+                            parameters[i + 4] = reader.ReadIndex();
                         }
 
-                        return CreateOpcode(kind, [p1, p2, p3, ..extraParams]);
+                        return CreateOpcode(parameters);
                     }
 
                     case HlOpcodeKind.Switch:
                     {
                         var p1 = (int)reader.ReadUIndex();
                         var p2 = (int)reader.ReadUIndex();
-                        var extraParams = new int[p2];
+                        var parameters = (Span<int>)stackalloc int[p2 + 4];
+                        {
+                            parameters[0] = (int)kind;
+                            parameters[1] = p1;
+                            parameters[2] = p2;
+                        }
+
                         for (var i = 0; i < p2; i++)
                         {
-                            extraParams[i] = (int)reader.ReadUIndex();
+                            parameters[i + 3] = (int)reader.ReadUIndex();
                         }
 
                         var p3 = (int)reader.ReadUIndex();
-                        return CreateOpcode(kind, [p1, p2, p3, ..extraParams]);
+                        {
+                            parameters[^1] = p3;
+                        }
+                        
+                        return CreateOpcode(parameters);
                     }
 
                     default:
@@ -550,21 +567,25 @@ public readonly struct HlImage
             default:
             {
                 var size = kind.GetArgumentCount();
-                var parameters = new int[size];
+                var parameters = (Span<int>)stackalloc int[size + 1];
+                {
+                    parameters[0] = (int)kind;
+                }
+                
                 for (var i = 0; i < size; i++)
                 {
-                    parameters[i] = reader.ReadIndex();
+                    parameters[i + 1] = reader.ReadIndex();
                 }
 
-                return CreateOpcode(kind, parameters);
+                return CreateOpcode(parameters);
             }
         }
 
-        static ImageOpcode CreateOpcode(HlOpcodeKind kind, params int[] data)
+        static ImageOpcode CreateOpcode(ReadOnlySpan<int> data)
         {
             return new ImageOpcode(
                 Ctx: new ImageOpcode.Context(
-                    Data: [(int)kind, ..data]
+                    Data: data.ToArray()
                 )
             );
         }

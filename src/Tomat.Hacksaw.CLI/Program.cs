@@ -12,10 +12,19 @@ internal static class Program
     {
         //using var fs = File.OpenRead(args[0]);
         var bytes = File.ReadAllBytes(args[0]);
-        using var ms = new MemoryStream(bytes);
-        var sw = Stopwatch.StartNew();
-        var image = HlImage.Read(ms);
-        sw.Stop();
-        Console.WriteLine(sw.ElapsedMilliseconds);
+        var sw = new Stopwatch();
+
+        for (var i = 0; i < 10; i++)
+        {
+            using var ms = new MemoryStream(bytes);
+
+            sw.Restart();
+            {
+                HlImage.Read(ms);
+            }
+            sw.Stop();
+
+            Console.WriteLine($"{i}: " + sw.ElapsedMilliseconds);
+        }
     }
 }
