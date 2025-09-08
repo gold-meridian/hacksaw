@@ -507,51 +507,6 @@ public readonly struct HlImage
 
         switch (kind.GetArgumentCount())
         {
-            case 0:
-            {
-                return CreateOpcode(
-                    kind
-                );
-            }
-
-            case 1:
-            {
-                return CreateOpcode(
-                    kind,
-                    reader.ReadIndex()
-                );
-            }
-
-            case 2:
-            {
-                return CreateOpcode(
-                    kind,
-                    reader.ReadIndex(),
-                    reader.ReadIndex()
-                );
-            }
-
-            case 3:
-            {
-                return CreateOpcode(
-                    kind,
-                    reader.ReadIndex(),
-                    reader.ReadIndex(),
-                    reader.ReadIndex()
-                );
-            }
-
-            case 4:
-            {
-                return CreateOpcode(
-                    kind,
-                    reader.ReadIndex(),
-                    reader.ReadIndex(),
-                    reader.ReadIndex(),
-                    reader.ReadIndex()
-                );
-            }
-
             case -1:
             {
                 switch (kind)
@@ -595,17 +550,14 @@ public readonly struct HlImage
 
             default:
             {
-                var size = kind.GetArgumentCount() - 3;
-                var p1 = reader.ReadIndex();
-                var p2 = reader.ReadIndex();
-                var p3 = reader.ReadIndex();
-                var extraParams = new int[size];
+                var size = kind.GetArgumentCount();
+                var parameters = new int[size];
                 for (var i = 0; i < size; i++)
                 {
-                    extraParams[i] = reader.ReadIndex();
+                    parameters[i] = reader.ReadIndex();
                 }
 
-                return CreateOpcode(kind, [p1, p2, p3, ..extraParams]);
+                return CreateOpcode(kind, parameters);
             }
         }
 
