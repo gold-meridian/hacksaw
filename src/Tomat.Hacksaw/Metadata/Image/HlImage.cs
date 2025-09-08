@@ -230,7 +230,7 @@ public readonly struct HlImage
             {
                 function = function with
                 {
-                    Debugs = ReadDebugInfo(reader, function.OpCodes.Length),
+                    Debugs = ReadDebugInfo(reader, function.Opcodes.Length),
                 };
             }
 
@@ -471,32 +471,32 @@ public readonly struct HlImage
     private static ImageFunction ReadFunction(HlByteReader reader)
     {
         var type = TypeHandle.From(reader.ReadIndex());
-        var fIndex = (int)reader.ReadUIndex();
-        var regCount = reader.ReadUIndex();
-        var opCount = reader.ReadUIndex();
-        var registers = new TypeHandle[regCount];
-        for (var i = 0; i < regCount; i++)
+        var functionIndex = (int)reader.ReadUIndex();
+        var variableCount = reader.ReadUIndex();
+        var opcodeCount = reader.ReadUIndex();
+        var variableTypes = new TypeHandle[variableCount];
+        for (var i = 0; i < variableCount; i++)
         {
-            registers[i] = TypeHandle.From(reader.ReadIndex());
+            variableTypes[i] = TypeHandle.From(reader.ReadIndex());
         }
 
-        var opcodes = new ImageOpCode[opCount];
-        for (var i = 0; i < opCount; i++)
+        var opcodes = new ImageOpcode[opcodeCount];
+        for (var i = 0; i < opcodeCount; i++)
         {
-            opcodes[i] = ReadOpCode(reader);
+            opcodes[i] = ReadOpcode(reader);
         }
 
         return new ImageFunction(
-            FunctionIndex: fIndex,
+            FunctionIndex: functionIndex,
             Type: type,
-            VariableTypes: registers,
-            OpCodes: opcodes,
+            VariableTypes: variableTypes,
+            Opcodes: opcodes,
             Debugs: [],
             Assigns: []
         );
     }
 
-    private static ImageOpCode ReadOpCode(HlByteReader reader)
+    private static ImageOpcode ReadOpcode(HlByteReader reader)
     {
         var kind = (HlOpcodeKind)reader.ReadUIndex();
 
@@ -509,14 +509,14 @@ public readonly struct HlImage
         {
             case 0:
             {
-                return CreateOpCode(
+                return CreateOpcode(
                     kind
                 );
             }
 
             case 1:
             {
-                return CreateOpCode(
+                return CreateOpcode(
                     kind,
                     reader.ReadIndex()
                 );
@@ -524,7 +524,7 @@ public readonly struct HlImage
 
             case 2:
             {
-                return CreateOpCode(
+                return CreateOpcode(
                     kind,
                     reader.ReadIndex(),
                     reader.ReadIndex()
@@ -533,7 +533,7 @@ public readonly struct HlImage
 
             case 3:
             {
-                return CreateOpCode(
+                return CreateOpcode(
                     kind,
                     reader.ReadIndex(),
                     reader.ReadIndex(),
@@ -543,7 +543,7 @@ public readonly struct HlImage
 
             case 4:
             {
-                return CreateOpCode(
+                return CreateOpcode(
                     kind,
                     reader.ReadIndex(),
                     reader.ReadIndex(),
@@ -571,7 +571,7 @@ public readonly struct HlImage
                             extraParams[i] = reader.ReadIndex();
                         }
 
-                        return CreateOpCode(kind, [p1, p2, p3, ..extraParams]);
+                        return CreateOpcode(kind, [p1, p2, p3, ..extraParams]);
                     }
 
                     case HlOpcodeKind.Switch:
@@ -585,7 +585,7 @@ public readonly struct HlImage
                         }
 
                         var p3 = (int)reader.ReadUIndex();
-                        return CreateOpCode(kind, [p1, p2, p3, ..extraParams]);
+                        return CreateOpcode(kind, [p1, p2, p3, ..extraParams]);
                     }
 
                     default:
@@ -605,14 +605,14 @@ public readonly struct HlImage
                     extraParams[i] = reader.ReadIndex();
                 }
 
-                return CreateOpCode(kind, [p1, p2, p3, ..extraParams]);
+                return CreateOpcode(kind, [p1, p2, p3, ..extraParams]);
             }
         }
 
-        static ImageOpCode CreateOpCode(HlOpcodeKind kind, params int[] data)
+        static ImageOpcode CreateOpcode(HlOpcodeKind kind, params int[] data)
         {
-            return new ImageOpCode(
-                Ctx: new ImageOpCode.Context(
+            return new ImageOpcode(
+                Ctx: new ImageOpcode.Context(
                     Data: [(int)kind, ..data]
                 )
             );

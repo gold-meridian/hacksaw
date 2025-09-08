@@ -7,7 +7,7 @@ namespace Tomat.Hacksaw.Metadata.Image;
 // This representation of an op-code is based on dead-cells-core-modding's
 // sharplink fork:
 // https://github.com/dead-cells-core-modding/core/blob/main/sources/HashlinkNET.Bytecode/HlFunction.cs#L119
-public readonly record struct ImageOpCode(ImageOpCode.Context Ctx)
+public readonly record struct ImageOpcode(ImageOpcode.Context Ctx)
 {
     public readonly record struct Context(int[] Data);
     
@@ -22,7 +22,7 @@ public readonly record struct ImageFunction(
     int FunctionIndex,
     TypeHandle Type,
     TypeHandle[] VariableTypes,
-    ImageOpCode[] OpCodes,
+    ImageOpcode[] Opcodes,
     ImageFunction.Debug[] Debugs,
     ImageFunction.Assign[] Assigns
 )

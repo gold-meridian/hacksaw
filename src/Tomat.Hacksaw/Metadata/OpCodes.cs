@@ -261,10 +261,3 @@ public static class HlOpcodeKindExtensions
         return OPCODE_ARGUMENT_COUNTS_FAST[(int)opcodeKind];
     }
 }
-
-public interface IHlOpcode
-{
-    static abstract int Arity { get; }
-}
-
-public class OpCodes { }
