@@ -1,6 +1,3 @@
-using System;
-using System.Linq;
-
 using Tomat.Hacksaw.Metadata.Image.Pooling;
 
 namespace Tomat.Hacksaw.Metadata.Image;
