@@ -30,7 +30,7 @@ public readonly struct HlImage
 
     public required IPool<DebugFileHandle, string> DebugFilePool { get; init; }
 
-    public required IPool<TypeHandle, IReadOnlyHlType> TypePool { get; init; }
+    public required IPool<TypeHandle, ImageType> TypePool { get; init; }
 
     public required IPool<GlobalHandle, ImageGlobal> GlobalPool { get; init; }
 
@@ -180,15 +180,15 @@ public readonly struct HlImage
         return new HashPool<DebugFileHandle, string>(ReadStringBlock(reader, debugCount));
     }
 
-    private static IPool<TypeHandle, IReadOnlyHlType> ReadTypes(HlByteReader reader, uint typeCount)
+    private static IPool<TypeHandle, ImageType> ReadTypes(HlByteReader reader, uint typeCount)
     {
-        var types = new IReadOnlyHlType[typeCount];
+        var types = new ImageType[typeCount];
         for (var i = 0; i < typeCount; i++)
         {
             types[i] = ReadType(reader);
         }
 
-        return new HashPool<TypeHandle, IReadOnlyHlType>(types);
+        return new HashPool<TypeHandle, ImageType>(types);
     }
 
     private static IPool<GlobalHandle, ImageGlobal> ReadGlobals(HlByteReader reader, uint globalCount)
@@ -199,7 +199,7 @@ public readonly struct HlImage
             globals[i] = ImageGlobal.From(FunctionHandle.From(reader.ReadIndex()));
         }
 
-        return new HashPool<GlobalHandle, ImageGlobal>(globals);
+        return new ListPool<GlobalHandle, ImageGlobal>(globals);
     }
 
     private static IPool<NativeHandle, ImageNative> ReadNatives(HlByteReader reader, uint nativeCount)
@@ -253,7 +253,7 @@ public readonly struct HlImage
         return strings;
     }
 
-    private static IReadOnlyHlType ReadType(HlByteReader reader)
+    private static ImageType ReadType(HlByteReader reader)
     {
         var kind = (HlTypeKind)reader.ReadByte();
 
@@ -262,44 +262,150 @@ public readonly struct HlImage
             case HlTypeKind.Fun:
             case HlTypeKind.Method:
             {
-                return null!;
+                var argCount = reader.ReadByte();
+                var arguments = new TypeHandle[argCount];
+                for (var i = 0; i < argCount; i++)
+                {
+                    arguments[i] = TypeHandle.From(reader.ReadIndex());
+                }
+
+                var function = new ImageTypeFunction
+                {
+                    ArgumentTypes = arguments,
+                    ReturnType = TypeHandle.From(reader.ReadIndex()),
+                };
+
+                return new ImageType.WithFunction(
+                    Kind: kind,
+                    Function: function
+                );
             }
 
             case HlTypeKind.Obj:
             case HlTypeKind.Struct:
             {
-                return null!;
+                var name = StringHandle.From(reader.ReadIndex());
+                var super = reader.ReadIndex();
+                var global = reader.ReadUIndex();
+                var fieldCount = reader.ReadUIndex();
+                var protoCount = reader.ReadUIndex();
+                var bindingCount = reader.ReadUIndex();
+                var @object = new ImageTypeObject(
+                    Name: name,
+                    Super: super < 0 ? null : TypeHandle.From(super),
+                    GlobalValue: (int)global,
+                    Fields: new ImageTypeObjectField[fieldCount],
+                    Prototypes: new ImageTypeObjectPrototype[protoCount],
+                    Bindings: new ImageTypeObject.BindingData[bindingCount]
+                );
+
+                for (var i = 0; i < fieldCount; i++)
+                {
+                    @object.Fields[i] = new ImageTypeObjectField(
+                        Name: StringHandle.From(reader.ReadIndex()),
+                        Type: TypeHandle.From(reader.ReadIndex()),
+                        Index: i
+                    );
+                }
+
+                for (var i = 0; i < protoCount; i++)
+                {
+                    @object.Prototypes[i] = new ImageTypeObjectPrototype(
+                        Name: StringHandle.From(reader.ReadIndex()),
+                        FunctionIndex: (int)reader.ReadUIndex(),
+                        PrototypeIndex: reader.ReadIndex()
+                    );
+                }
+
+                for (var i = 0; i < bindingCount; i++)
+                {
+                    @object.Bindings[i] = new ImageTypeObject.BindingData(
+                        FieldIndex: (int)reader.ReadUIndex(),
+                        FunctionIndex: (int)reader.ReadUIndex()
+                    );
+                }
+
+                return new ImageType.WithObject(
+                    Kind: kind,
+                    Object: @object
+                );
             }
 
             case HlTypeKind.Ref:
             {
-                return null!;
+                return new ImageType.WithType(
+                    Kind: kind,
+                    Type: TypeHandle.From(reader.ReadIndex())
+                );
             }
 
             case HlTypeKind.Virtual:
             {
-                return null!;
+                var fieldCount = reader.ReadUIndex();
+                var @virtual = new ImageTypeVirtual(
+                    Fields: new ImageTypeObjectField[fieldCount]
+                );
+
+                for (var i = 0; i < fieldCount; i++)
+                {
+                    @virtual.Fields[i] = new ImageTypeObjectField(
+                        Name: StringHandle.From(reader.ReadIndex()),
+                        Type: TypeHandle.From(reader.ReadIndex()),
+                        i
+                    );
+                }
+
+                return new ImageType.WithVirtual(
+                    Kind: kind,
+                    Virtual: @virtual
+                );
             }
 
             case HlTypeKind.Abstract:
             {
-                return null!;
+                return new ImageType.WithAbstractName(
+                    Kind: kind,
+                    AbstractName: StringHandle.From(reader.ReadIndex())
+                );
             }
 
             case HlTypeKind.Enum:
             {
-                return null!;
+                var @enum = new ImageTypeEnum(
+                    Name: StringHandle.From(reader.ReadIndex()),
+                    GlobalValue: (int)reader.ReadUIndex(),
+                    Constructs: new ImageTypeEnumConstruct[reader.ReadUIndex()]
+                );
+
+                for (var i = 0; i < @enum.Constructs.Length; i++)
+                {
+                    var name = StringHandle.From(reader.ReadIndex());
+                    var paramCount = reader.ReadUIndex();
+                    var construct = @enum.Constructs[i] = new ImageTypeEnumConstruct(
+                        Name: name,
+                        Parameters: new TypeHandle[paramCount],
+                        Offsets: new int[paramCount]
+                    );
+
+                    for (var j = 0; j < paramCount; j++)
+                    {
+                        construct.Parameters[j] = TypeHandle.From(reader.ReadIndex());
+                    }
+                }
+
+                return new ImageType.WithEnum(
+                    Kind: kind,
+                    Enum: @enum
+                );
             }
 
             case HlTypeKind.Null:
             case HlTypeKind.Packed:
             {
-                return null!;
-            }
-
-            case HlTypeKind.Guid:
-            {
-                throw new NotImplementedException("GUID type reading not yet implemented, can probably be a fall-through");
+                return new ImageType.WithType(
+                    Kind: kind,
+                    Type: TypeHandle.From(reader.ReadIndex())
+                );
             }
 
             default:
@@ -309,7 +415,7 @@ public readonly struct HlImage
                     throw new InvalidDataException($"Invalid type kind: : {kind}");
                 }
 
-                return null!;
+                return new ImageType.Simple(kind);
             }
         }
     }
