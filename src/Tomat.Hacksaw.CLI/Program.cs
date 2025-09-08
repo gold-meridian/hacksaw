@@ -14,6 +14,8 @@ internal static class Program
         var bytes = File.ReadAllBytes(args[0]);
         var sw = new Stopwatch();
 
+        var total = 0L;
+
         for (var i = 0; i < 10; i++)
         {
             using var ms = new MemoryStream(bytes);
@@ -25,6 +27,9 @@ internal static class Program
             sw.Stop();
 
             Console.WriteLine($"{i}: " + sw.ElapsedMilliseconds);
+            total += sw.ElapsedMilliseconds;
         }
+        
+        Console.WriteLine($"Average: {total / 10}");
     }
 }
