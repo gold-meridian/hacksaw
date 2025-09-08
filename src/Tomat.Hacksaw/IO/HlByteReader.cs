@@ -2,6 +2,7 @@ using System;
 using System.Buffers.Binary;
 using System.Diagnostics;
 using System.IO;
+using System.Runtime.CompilerServices;
 
 namespace Tomat.Hacksaw.IO;
 
@@ -55,30 +56,6 @@ public readonly struct HlByteReader(BinaryReader reader)
 
     public int ReadIndex()
     {
-        /*Span<byte> buf = stackalloc byte[3];
-        var b = reader.ReadByte();
-
-        if ((b & 0x80) == 0)
-        {
-            return b;
-        }
-
-        var extraBytes = (b & 0x40) == 0 ? 1 : 3;
-        var read = reader.Read(buf[..extraBytes]);
-        {
-            Debug.Assert(read == extraBytes);
-        }
-
-        var v = extraBytes switch
-        {
-            1 => buf[0] | ((b & 0x1F) << 8),
-            3 => ((b & 0x1F) << 24) | (buf[0] << 16) | (buf[1] << 8) | buf[2],
-            _ => throw new InvalidOperationException("Unreachable"),
-        };
-
-        var signBit = (b >> 5) & 1;
-        return (v ^ -signBit) + signBit;*/
-        
         var b = reader.ReadByte();
         int v;
 
@@ -107,6 +84,30 @@ public readonly struct HlByteReader(BinaryReader reader)
 
         var signBit = (b >> 5) & 1;
         return (v ^ -signBit) + signBit;
+        
+        /*Span<byte> buf = stackalloc byte[3];
+        var b = reader.ReadByte();
+
+        if ((b & 0x80) == 0)
+        {
+            return b;
+        }
+
+        var extraBytes = (b & 0x40) == 0 ? 1 : 3;
+        var read = reader.Read(buf[..extraBytes]);
+        {
+            Debug.Assert(read == extraBytes);
+        }
+
+        var v = extraBytes switch
+        {
+            1 => buf[0] | ((b & 0x1F) << 8),
+            3 => ((b & 0x1F) << 24) | (buf[0] << 16) | (buf[1] << 8) | buf[2],
+            _ => throw new InvalidOperationException("Unreachable"),
+        };
+
+        var signBit = (b >> 5) & 1;
+        return (v ^ -signBit) + signBit;*/
 
         /*
         var b = reader.ReadByte();
@@ -134,12 +135,29 @@ public readonly struct HlByteReader(BinaryReader reader)
 
     public uint ReadUIndex()
     {
-        var index = ReadIndex();
-        if (index < 0)
+        var b = reader.ReadByte();
+        uint v;
+
+        switch ((b >> 6) & 0b11)
         {
-            throw new InvalidDataException("Unsigned index read with negative value");
+            case 0b00:
+            case 0b01:
+                return b;
+
+            case 0b10:
+                v = reader.ReadByte() | (uint)((b & 0x1F) << 8);
+                break;
+
+            case 0b11:
+                v = ((uint)(b & 0x1F) << 24) | (uint)(reader.ReadByte() << 16) | (uint)(reader.ReadByte() << 8) | reader.ReadByte();
+                break;
+
+            default:
+                throw new InvalidOperationException($"Invalid var-int prefix: {(b >> 6) & 0b11}");
         }
 
-        return (uint)index;
+        Debug.Assert(((b >> 5) & 1) != 1);
+        // throw new InvalidDataException("Unsigned index read with negative value");
+        return v;
     }
 }
