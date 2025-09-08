@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
@@ -36,9 +37,9 @@ public readonly struct HlImage
 
     public required IPool<NativeHandle, ImageNative> NativePool { get; init; }
 
-    public required IPool<FunctionHandle, object> FunctionPool { get; init; } // TODO: HlFunction
+    public required IPool<FunctionHandle, ImageFunction> FunctionPool { get; init; }
 
-    public required IPool<ConstantHandle, object> ConstantPool { get; init; } // TODO: HlConstant
+    public required IPool<ConstantHandle, ImageConstant> ConstantPool { get; init; }
 
     public required FunctionHandle Entrypoint { get; init; }
 
@@ -83,7 +84,7 @@ public readonly struct HlImage
         var typePool = ReadTypes(reader, typeCount);
         var globalPool = ReadGlobals(reader, globalCount);
         var nativePool = ReadNatives(reader, nativeCount);
-        var functionPool = ReadFunctions(reader, functionCount);
+        var functionPool = ReadFunctions(reader, functionCount, flags.HasFlag(HlFlags.Debug), version);
         var constantPool = ReadConstants(reader, constantCount);
 
         return new HlImage
@@ -218,14 +219,61 @@ public readonly struct HlImage
         return new HashPool<NativeHandle, ImageNative>(natives);
     }
 
-    private static IPool<FunctionHandle, object> ReadFunctions(HlByteReader reader, uint functionCount)
+    private static IPool<FunctionHandle, ImageFunction> ReadFunctions(HlByteReader reader, uint functionCount, bool debug, HlVersion version)
     {
-        return new HashPool<FunctionHandle, object>([]);
+        var functions = new ImageFunction[functionCount];
+        for (var i = 0; i < functionCount; i++)
+        {
+            var function = ReadFunction(reader);
+
+            if (debug)
+            {
+                function = function with
+                {
+                    Debugs = ReadDebugInfo(reader, function.OpCodes.Length),
+                };
+            }
+
+            if (version >= HlVersion.FEATURE_FUNC_ASSIGNS)
+            {
+                var assignCount = reader.ReadUIndex();
+                function = function with
+                {
+                    Assigns = new ImageFunction.Assign[assignCount],
+                };
+
+                for (var j = 0; j < assignCount; j++)
+                {
+                    function.Assigns[j] = new ImageFunction.Assign(
+                        Name: StringHandle.From((int)reader.ReadUIndex()),
+                        Index: reader.ReadIndex()
+                    );
+                }
+            }
+
+            functions[i] = function;
+        }
+
+        return new HashPool<FunctionHandle, ImageFunction>(functions);
     }
 
-    private static IPool<ConstantHandle, object> ReadConstants(HlByteReader reader, uint constantCount)
+    private static IPool<ConstantHandle, ImageConstant> ReadConstants(HlByteReader reader, uint constantCount)
     {
-        return new HashPool<ConstantHandle, object>([]);
+        var constants = new ImageConstant[constantCount];
+        for (var i = 0; i < constantCount; i++)
+        {
+            var constant = constants[i] = new ImageConstant(
+                GlobalIndex: (int)reader.ReadUIndex(),
+                Fields: new int[reader.ReadUIndex()]
+            );
+
+            for (var j = 0; j < constant.Fields.Length; j++)
+            {
+                constant.Fields[j] = (int)reader.ReadUIndex();
+            }
+        }
+
+        return new HashPool<ConstantHandle, ImageConstant>(constants);
     }
 
     private static string[] ReadStringBlock(HlByteReader reader, uint stringCount)
@@ -418,5 +466,224 @@ public readonly struct HlImage
                 return new ImageType.Simple(kind);
             }
         }
+    }
+
+    private static ImageFunction ReadFunction(HlByteReader reader)
+    {
+        var type = TypeHandle.From(reader.ReadIndex());
+        var fIndex = (int)reader.ReadUIndex();
+        var regCount = reader.ReadUIndex();
+        var opCount = reader.ReadUIndex();
+        var registers = new TypeHandle[regCount];
+        for (var i = 0; i < regCount; i++)
+        {
+            registers[i] = TypeHandle.From(reader.ReadIndex());
+        }
+
+        var opcodes = new ImageOpCode[opCount];
+        for (var i = 0; i < opCount; i++)
+        {
+            opcodes[i] = ReadOpCode(reader);
+        }
+
+        return new ImageFunction(
+            FunctionIndex: fIndex,
+            Type: type,
+            VariableTypes: registers,
+            OpCodes: opcodes,
+            Debugs: [],
+            Assigns: []
+        );
+    }
+
+    private static ImageOpCode ReadOpCode(HlByteReader reader)
+    {
+        var kind = (HlOpcodeKind)reader.ReadUIndex();
+
+        if (kind >= HlOpcodeKind.Last)
+        {
+            throw new InvalidDataException($"Got invalid opcode kind: {kind}");
+        }
+
+        switch (kind.GetArgumentCount())
+        {
+            case 0:
+            {
+                return CreateOpCode(
+                    kind
+                );
+            }
+
+            case 1:
+            {
+                return CreateOpCode(
+                    kind,
+                    reader.ReadIndex()
+                );
+            }
+
+            case 2:
+            {
+                return CreateOpCode(
+                    kind,
+                    reader.ReadIndex(),
+                    reader.ReadIndex()
+                );
+            }
+
+            case 3:
+            {
+                return CreateOpCode(
+                    kind,
+                    reader.ReadIndex(),
+                    reader.ReadIndex(),
+                    reader.ReadIndex()
+                );
+            }
+
+            case 4:
+            {
+                return CreateOpCode(
+                    kind,
+                    reader.ReadIndex(),
+                    reader.ReadIndex(),
+                    reader.ReadIndex(),
+                    reader.ReadIndex()
+                );
+            }
+
+            case -1:
+            {
+                switch (kind)
+                {
+                    case HlOpcodeKind.CallN:
+                    case HlOpcodeKind.CallClosure:
+                    case HlOpcodeKind.CallMethod:
+                    case HlOpcodeKind.CallThis:
+                    case HlOpcodeKind.MakeEnum:
+                    {
+                        var p1 = reader.ReadIndex();
+                        var p2 = reader.ReadIndex();
+                        var p3 = (int)reader.ReadByte();
+                        var extraParams = new int[p3];
+                        for (var i = 0; i < p3; i++)
+                        {
+                            extraParams[i] = reader.ReadIndex();
+                        }
+
+                        return CreateOpCode(kind, [p1, p2, p3, ..extraParams]);
+                    }
+
+                    case HlOpcodeKind.Switch:
+                    {
+                        var p1 = (int)reader.ReadUIndex();
+                        var p2 = (int)reader.ReadUIndex();
+                        var extraParams = new int[p2];
+                        for (var i = 0; i < p2; i++)
+                        {
+                            extraParams[i] = (int)reader.ReadUIndex();
+                        }
+
+                        var p3 = (int)reader.ReadUIndex();
+                        return CreateOpCode(kind, [p1, p2, p3, ..extraParams]);
+                    }
+
+                    default:
+                        throw new InvalidDataException($"Invalid opcode kind for variable-length decoding: {kind}");
+                }
+            }
+
+            default:
+            {
+                var size = kind.GetArgumentCount() - 3;
+                var p1 = reader.ReadIndex();
+                var p2 = reader.ReadIndex();
+                var p3 = reader.ReadIndex();
+                var extraParams = new int[size];
+                for (var i = 0; i < size; i++)
+                {
+                    extraParams[i] = reader.ReadIndex();
+                }
+
+                return CreateOpCode(kind, [p1, p2, p3, ..extraParams]);
+            }
+        }
+
+        static ImageOpCode CreateOpCode(HlOpcodeKind kind, params int[] data)
+        {
+            return new ImageOpCode(
+                Ctx: new ImageOpCode.Context(
+                    Data: [(int)kind, ..data]
+                )
+            );
+        }
+    }
+
+    private static ImageFunction.Debug[] ReadDebugInfo(HlByteReader reader, int opcodeCount)
+    {
+        var debug = new ImageFunction.Debug[opcodeCount];
+
+        var currFile = -1;
+        var currLine = 0;
+        
+        var currOpcode = 0;
+        while (currOpcode < opcodeCount)
+        {
+            var c = reader.ReadByte();
+
+            if ((c & 1) != 0)
+            {
+                c >>= 1;
+                currFile = (c << 8) | reader.ReadByte();
+
+                /*if (currFile >= code.DebugFiles.Count)
+                {
+                    throw new InvalidDataException($"Invalid debug file index: {currFile}");
+                }*/
+            }
+            else if ((c & 2) != 0)
+            {
+                var delta = c >> 6;
+                var count = (c >> 2) & 15;
+                if (currOpcode + count > opcodeCount)
+                {
+                    throw new InvalidDataException($"Invalid debug line count: {count}");
+                }
+
+                while (count-- > 0)
+                {
+                    debug[currOpcode] = new ImageFunction.Debug(
+                        DebugFileHandle.From(currFile),
+                        currLine
+                    );
+
+                    currOpcode++;
+                }
+
+                currLine += delta;
+            }
+            else if ((c & 4) != 0)
+            {
+                currLine += c >> 3;
+                debug[currOpcode] = new ImageFunction.Debug(
+                    DebugFileHandle.From(currFile),
+                    currLine
+                );
+                currOpcode++;
+            }
+            else
+            {
+                var b2 = reader.ReadByte();
+                var b3 = reader.ReadByte();
+                currLine = (c >> 3) | (b2 << 5) | (b3 << 13);
+                debug[currOpcode] = new ImageFunction.Debug(
+                    DebugFileHandle.From(currFile),
+                    currLine
+                );
+                currOpcode++;
+            }
+        }
+
+        return debug;
     }
 }
