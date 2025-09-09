@@ -25,8 +25,7 @@ public class ReadAllowImmutableData
     [Benchmark(Baseline = true)]
     public void HacksawRead()
     {
-        using var ms = new MemoryStream(data);
-        _ = HlImage.Read(ms);
+        _ = HlImage.Read(data);
     }
 
     [Benchmark]
@@ -45,5 +44,11 @@ public class ReadAllowImmutableData
     public void DccmHashlinkNetRead()
     {
         _ = HashlinkNET.Bytecode.HlCode.FromBytes(data);
+    }
+    
+    [Benchmark()]
+    public void ZzzHacksawRead()
+    {
+        _ = HlImage.Read(data);
     }
 }

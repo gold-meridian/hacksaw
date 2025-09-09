@@ -7,6 +7,10 @@
         <Nullable>enable</Nullable>
     </PropertyGroup>
 
+    <PropertyGroup>
+        <ServerGarbageCollection>true</ServerGarbageCollection>
+    </PropertyGroup>
+
     <ItemGroup>
         <ProjectReference Include="..\Tomat.Hacksaw\Tomat.Hacksaw.csproj"/>
     </ItemGroup>
