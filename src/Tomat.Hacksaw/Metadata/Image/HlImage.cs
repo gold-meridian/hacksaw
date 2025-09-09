@@ -113,7 +113,7 @@ public readonly struct HlImage
             ints[i] = reader.ReadInt32();
         }
 
-        return new HashPool<IntHandle, int>(ints);
+        return new ImmutableListPool<IntHandle, int>(ints);
     }
 
     private static IPool<FloatHandle, double> ReadFloats(HlByteReader reader, uint floatCount)
@@ -124,19 +124,19 @@ public readonly struct HlImage
             floats[i] = reader.ReadDouble();
         }
 
-        return new HashPool<FloatHandle, double>(floats);
+        return new ImmutableListPool<FloatHandle, double>(floats);
     }
 
     private static IPool<StringHandle, string> ReadStrings(HlByteReader reader, uint stringCount)
     {
-        return new HashPool<StringHandle, string>(ReadStringBlock(reader, stringCount));
+        return new ImmutableListPool<StringHandle, string>(ReadStringBlock(reader, stringCount));
     }
 
     private static IPool<ByteHandle, ByteCollection> ReadBytes(HlByteReader reader, uint byteCount, bool readBytes)
     {
         if (!readBytes)
         {
-            return new HashPool<ByteHandle, ByteCollection>([]);
+            return new ImmutableListPool<ByteHandle, ByteCollection>([]);
         }
 
         var bytesSize = reader.ReadInt32();
@@ -166,18 +166,18 @@ public readonly struct HlImage
             byteCollections[i] = new ByteCollection(bytes.AsMemory((int)start, length));
         }
 
-        return new HashPool<ByteHandle, ByteCollection>([]);
+        return new ImmutableListPool<ByteHandle, ByteCollection>(byteCollections);
     }
 
     private static IPool<DebugFileHandle, string> ReadDebugFiles(HlByteReader reader, bool hasFlag)
     {
         if (!hasFlag)
         {
-            return new HashPool<DebugFileHandle, string>([]);
+            return new ImmutableListPool<DebugFileHandle, string>([]);
         }
 
         var debugCount = reader.ReadUIndex();
-        return new HashPool<DebugFileHandle, string>(ReadStringBlock(reader, debugCount));
+        return new ImmutableListPool<DebugFileHandle, string>(ReadStringBlock(reader, debugCount));
     }
 
     private static IPool<TypeHandle, ImageType> ReadTypes(HlByteReader reader, uint typeCount)
@@ -188,7 +188,7 @@ public readonly struct HlImage
             types[i] = ReadType(reader);
         }
 
-        return new HashPool<TypeHandle, ImageType>(types);
+        return new ImmutableListPool<TypeHandle, ImageType>(types);
     }
 
     private static IPool<GlobalHandle, ImageGlobal> ReadGlobals(HlByteReader reader, uint globalCount)
@@ -199,7 +199,7 @@ public readonly struct HlImage
             globals[i] = ImageGlobal.From(FunctionHandle.From(reader.ReadIndex()));
         }
 
-        return new ListPool<GlobalHandle, ImageGlobal>(globals);
+        return new ImmutableListPool<GlobalHandle, ImageGlobal>(globals);
     }
 
     private static IPool<NativeHandle, ImageNative> ReadNatives(HlByteReader reader, uint nativeCount)
@@ -215,7 +215,7 @@ public readonly struct HlImage
             );
         }
 
-        return new HashPool<NativeHandle, ImageNative>(natives);
+        return new ImmutableListPool<NativeHandle, ImageNative>(natives);
     }
 
     private static IPool<FunctionHandle, ImageFunction> ReadFunctions(HlByteReader reader, uint functionCount, bool debug, HlVersion version)
@@ -253,7 +253,7 @@ public readonly struct HlImage
             functions[i] = function;
         }
 
-        return new HashPool<FunctionHandle, ImageFunction>(functions);
+        return new ImmutableListPool<FunctionHandle, ImageFunction>(functions);
     }
 
     private static IPool<ConstantHandle, ImageConstant> ReadConstants(HlByteReader reader, uint constantCount)
@@ -272,7 +272,7 @@ public readonly struct HlImage
             }
         }
 
-        return new HashPool<ConstantHandle, ImageConstant>(constants);
+        return new ImmutableListPool<ConstantHandle, ImageConstant>(constants);
     }
 
     private static string[] ReadStringBlock(HlByteReader reader, uint stringCount)

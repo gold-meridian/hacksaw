@@ -23,11 +23,6 @@ public readonly struct HlHeader(ReadOnlyMemory<byte> value) : IEquatable<HlHeade
             // If we are searching for a specific header then we should analyze
             // all the data available to us.
 
-            if (reader.ReadBytes(headerBytes) != headerSize)
-            {
-                throw new InvalidDataException("Could not read header (not enough bytes)");
-            }
-
             while (true)
             {
                 while (reader.ReadBytes(headerBytes) == headerSize)

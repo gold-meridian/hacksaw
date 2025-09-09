@@ -1,0 +1,9 @@
+[submodule "benchmark/sharplink"]
+	path = benchmark/sharplink
+	url = https://github.com/steviegt6/sharplink
+[submodule "benchmark/haxelink"]
+	path = benchmark/haxelink
+	url = https://github.com/LebiFur/Haxelink
+[submodule "benchmark/dccm"]
+	path = benchmark/dccm
+	url = https://github.com/dead-cells-core-modding/core

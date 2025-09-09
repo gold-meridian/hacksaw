@@ -9,6 +9,16 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tomat.Hacksaw.CLI", "Tomat.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tomat.Hacksaw.OpcodeGenerator", "Tomat.Hacksaw.OpcodeGenerator\Tomat.Hacksaw.OpcodeGenerator.csproj", "{028EB142-AEDE-4C80-9AF9-3AFDCB5078CA}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tomat.Hacksaw.Benchmarks", "Tomat.Hacksaw.Benchmarks\Tomat.Hacksaw.Benchmarks.csproj", "{6A6288CA-537F-4FA3-B3F8-5DE8DA08F6D9}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "benchmark-deps", "benchmark-deps", "{C4848D2E-9D93-46F4-86ED-86CB379D2D0F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tomat.SharpLink", "..\benchmark\sharplink\src\Tomat.SharpLink\Tomat.SharpLink.csproj", "{1270044E-CA9F-4944-ACCD-77F6560F5789}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Haxelink", "..\benchmark\haxelink\Haxelink\Haxelink.csproj", "{6CFE4C48-D778-4ABC-B039-0C9B25C67945}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HashlinkNET.Bytecode", "..\benchmark\dccm\sources\HashlinkNET.Bytecode\HashlinkNET.Bytecode.csproj", "{E5CB9D11-D083-4D19-8F66-D71D29CF51E8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -30,5 +40,26 @@ Global
 		{028EB142-AEDE-4C80-9AF9-3AFDCB5078CA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{028EB142-AEDE-4C80-9AF9-3AFDCB5078CA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{028EB142-AEDE-4C80-9AF9-3AFDCB5078CA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6A6288CA-537F-4FA3-B3F8-5DE8DA08F6D9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6A6288CA-537F-4FA3-B3F8-5DE8DA08F6D9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6A6288CA-537F-4FA3-B3F8-5DE8DA08F6D9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6A6288CA-537F-4FA3-B3F8-5DE8DA08F6D9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1270044E-CA9F-4944-ACCD-77F6560F5789}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1270044E-CA9F-4944-ACCD-77F6560F5789}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1270044E-CA9F-4944-ACCD-77F6560F5789}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1270044E-CA9F-4944-ACCD-77F6560F5789}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6CFE4C48-D778-4ABC-B039-0C9B25C67945}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6CFE4C48-D778-4ABC-B039-0C9B25C67945}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6CFE4C48-D778-4ABC-B039-0C9B25C67945}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6CFE4C48-D778-4ABC-B039-0C9B25C67945}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E5CB9D11-D083-4D19-8F66-D71D29CF51E8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E5CB9D11-D083-4D19-8F66-D71D29CF51E8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E5CB9D11-D083-4D19-8F66-D71D29CF51E8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E5CB9D11-D083-4D19-8F66-D71D29CF51E8}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{1270044E-CA9F-4944-ACCD-77F6560F5789} = {C4848D2E-9D93-46F4-86ED-86CB379D2D0F}
+		{6CFE4C48-D778-4ABC-B039-0C9B25C67945} = {C4848D2E-9D93-46F4-86ED-86CB379D2D0F}
+		{E5CB9D11-D083-4D19-8F66-D71D29CF51E8} = {C4848D2E-9D93-46F4-86ED-86CB379D2D0F}
 	EndGlobalSection
 EndGlobal
