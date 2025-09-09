@@ -1,4 +1,5 @@
 using System;
+using System.Buffers.Binary;
 using System.Runtime.CompilerServices;
 
 namespace Tomat.Hacksaw.IO;
@@ -71,67 +72,39 @@ public unsafe ref struct MemoryByteReader : IByteReader
         return read;
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public int ReadIndex()
     {
         var p = current;
-        var b = *p++;
+        uint b = *p;
 
-        if ((b & 0x80) == 0)
+        if (b < 0x80)
         {
-            current = p;
-            return b;
+            current = p + 1;
+            return (int)b;
         }
 
-        if ((b & 0x40) == 0)
+        p++;
+    
+        if (b < 0xC0)
         {
-            var v = *p++ | ((b & 0x1F) << 8);
-            current = p;
-            
-            var signBit = (b << 26) >> 31;
-            return (v ^ signBit) - signBit;
+            var v = *p | ((b & 0x1F) << 8);
+            current = p + 1;
+        
+            return (b & 0x20) != 0 ? -(int)v : (int)v;
         }
-
-        var bytes3 = Unsafe.ReadUnaligned<int>(p) & 0x00FFFFFF;
-        var c = bytes3 & 0xFF;
-        var d = (bytes3 >> 8) & 0xFF;
-        var e = (bytes3 >> 16) & 0xFF;
-
-        var v4 = ((b & 0x1F) << 24) | (c << 16) | (d << 8) | e;
+    
+        var chunk = *(uint*)p;
+        var swapped = BinaryPrimitives.ReverseEndianness(chunk) >> 8;
+        var v4 = ((b & 0x1F) << 24) | swapped;
         current = p + 3;
-
-        var signBit4 = (b << 26) >> 31;
-        return (v4 ^ signBit4) - signBit4;
+    
+        return (b & 0x20) != 0 ? -(int)v4 : (int)v4;
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public uint ReadUIndex()
     {
-        var p = current;
-        var b = *p++;
-
-        if ((b & 0x80) == 0)
-        {
-            current = p;
-            return b;
-        }
-
-        if ((b & 0x40) == 0)
-        {
-            var v = (uint)(*p++ | ((b & 0x1F) << 8));
-            current = p;
-
-            var mask = (uint)((b << 26) >> 31);
-            return v & ~mask;
-        }
-
-        var bytes3 = Unsafe.ReadUnaligned<uint>(p) & 0x00FFFFFF;
-        var c = bytes3 & 0xFF;
-        var d = (bytes3 >> 8) & 0xFF;
-        var e = (bytes3 >> 16) & 0xFF;
-
-        var v4 = (uint)((b & 0x1F) << 24) | (c << 16) | (d << 8) | e;
-        current = p + 3;
-
-        var mask4 = (uint)((b << 26) >> 31);
-        return v4 & ~mask4;
+        return (uint)ReadIndex();
     }
 }
