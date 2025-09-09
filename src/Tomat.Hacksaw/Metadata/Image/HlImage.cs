@@ -51,18 +51,26 @@ public readonly struct HlImage
 
     public static HlImage Read(BinaryReader reader)
     {
-        return Read(new HlByteReader(reader));
+        var sReader = new StreamByteReader(reader);
+        return Read(ref sReader);
     }
 
-    public static HlImage Read(HlByteReader reader)
+    public static HlImage Read(byte[] data)
     {
-        var header = HlHeader.Read(reader, HlHeader.HLB);
+        var reader = new MemoryByteReader(data);
+        return Read(ref reader);
+    }
+
+    public static HlImage Read<TByteReader>(ref TByteReader reader)
+        where TByteReader : IByteReader, allows ref struct
+    {
+        var header = HlHeader.Read(ref reader, HlHeader.HLB);
         if (header != HlHeader.HLB)
         {
             throw new InvalidDataException("Expected header: 'HLB'");
         }
 
-        var version = HlVersion.Read(reader);
+        var version = HlVersion.Read(ref reader);
 
         var flags = (HlFlags)reader.ReadUIndex();
         var intCount = reader.ReadUIndex();
@@ -76,16 +84,16 @@ public readonly struct HlImage
         var constantCount = reader.ReadUIndex();
         var entryPoint = reader.ReadUIndex();
 
-        var intPool = ReadInts(reader, intCount);
-        var floatPool = ReadFloats(reader, floatCount);
-        var stringPool = ReadStrings(reader, stringCount);
-        var bytePool = ReadBytes(reader, byteCount, version >= HlVersion.FEATURE_BYTES);
-        var debugFilePool = ReadDebugFiles(reader, flags.HasFlag(HlFlags.Debug));
-        var typePool = ReadTypes(reader, typeCount);
-        var globalPool = ReadGlobals(reader, globalCount);
-        var nativePool = ReadNatives(reader, nativeCount);
-        var functionPool = ReadFunctions(reader, functionCount, flags.HasFlag(HlFlags.Debug), version);
-        var constantPool = ReadConstants(reader, constantCount);
+        var intPool = ReadInts(ref reader, intCount);
+        var floatPool = ReadFloats(ref reader, floatCount);
+        var stringPool = ReadStrings(ref reader, stringCount);
+        var bytePool = ReadBytes(ref reader, byteCount, version >= HlVersion.FEATURE_BYTES);
+        var debugFilePool = ReadDebugFiles(ref reader, flags.HasFlag(HlFlags.Debug));
+        var typePool = ReadTypes(ref reader, typeCount);
+        var globalPool = ReadGlobals(ref reader, globalCount);
+        var nativePool = ReadNatives(ref reader, nativeCount);
+        var functionPool = ReadFunctions(ref reader, functionCount, flags.HasFlag(HlFlags.Debug), version);
+        var constantPool = ReadConstants(ref reader, constantCount);
 
         return new HlImage
         {
@@ -106,7 +114,8 @@ public readonly struct HlImage
         };
     }
 
-    private static IPool<IntHandle, int> ReadInts(HlByteReader reader, uint intCount)
+    private static IPool<IntHandle, int> ReadInts<TByteReader>(ref TByteReader reader, uint intCount)
+        where TByteReader : IByteReader, allows ref struct
     {
         var ints = new List<int>((int)intCount);
         for (var i = 0; i < intCount; i++)
@@ -117,7 +126,8 @@ public readonly struct HlImage
         return new ImmutableListPool<IntHandle, int>(ints);
     }
 
-    private static IPool<FloatHandle, double> ReadFloats(HlByteReader reader, uint floatCount)
+    private static IPool<FloatHandle, double> ReadFloats<TByteReader>(ref TByteReader reader, uint floatCount)
+        where TByteReader : IByteReader, allows ref struct
     {
         var floats = new List<double>((int)floatCount);
         for (var i = 0; i < floatCount; i++)
@@ -128,12 +138,14 @@ public readonly struct HlImage
         return new ImmutableListPool<FloatHandle, double>(floats);
     }
 
-    private static IPool<StringHandle, string> ReadStrings(HlByteReader reader, uint stringCount)
+    private static IPool<StringHandle, string> ReadStrings<TByteReader>(ref TByteReader reader, uint stringCount)
+        where TByteReader : IByteReader, allows ref struct
     {
-        return new ImmutableListPool<StringHandle, string>(ReadStringBlock(reader, stringCount));
+        return new ImmutableListPool<StringHandle, string>(ReadStringBlock(ref reader, stringCount));
     }
 
-    private static IPool<ByteHandle, ByteCollection> ReadBytes(HlByteReader reader, uint byteCount, bool readBytes)
+    private static IPool<ByteHandle, ByteCollection> ReadBytes<TByteReader>(ref TByteReader reader, uint byteCount, bool readBytes)
+        where TByteReader : IByteReader, allows ref struct
     {
         if (!readBytes)
         {
@@ -170,7 +182,8 @@ public readonly struct HlImage
         return new ImmutableListPool<ByteHandle, ByteCollection>(byteCollections);
     }
 
-    private static IPool<DebugFileHandle, string> ReadDebugFiles(HlByteReader reader, bool hasFlag)
+    private static IPool<DebugFileHandle, string> ReadDebugFiles<TByteReader>(ref TByteReader reader, bool hasFlag)
+        where TByteReader : IByteReader, allows ref struct
     {
         if (!hasFlag)
         {
@@ -178,21 +191,23 @@ public readonly struct HlImage
         }
 
         var debugCount = reader.ReadUIndex();
-        return new ImmutableListPool<DebugFileHandle, string>(ReadStringBlock(reader, debugCount));
+        return new ImmutableListPool<DebugFileHandle, string>(ReadStringBlock(ref reader, debugCount));
     }
 
-    private static IPool<TypeHandle, ImageType> ReadTypes(HlByteReader reader, uint typeCount)
+    private static IPool<TypeHandle, ImageType> ReadTypes<TByteReader>(ref TByteReader reader, uint typeCount)
+        where TByteReader : IByteReader, allows ref struct
     {
         var types = new List<ImageType>((int)typeCount);
         for (var i = 0; i < typeCount; i++)
         {
-            types.Add(ReadType(reader));
+            types.Add(ReadType(ref reader));
         }
 
         return new ImmutableListPool<TypeHandle, ImageType>(types);
     }
 
-    private static IPool<GlobalHandle, ImageGlobal> ReadGlobals(HlByteReader reader, uint globalCount)
+    private static IPool<GlobalHandle, ImageGlobal> ReadGlobals<TByteReader>(ref TByteReader reader, uint globalCount)
+        where TByteReader : IByteReader, allows ref struct
     {
         var globals = new List<ImageGlobal>((int)globalCount);
         for (var i = 0; i < globalCount; i++)
@@ -203,7 +218,8 @@ public readonly struct HlImage
         return new ImmutableListPool<GlobalHandle, ImageGlobal>(globals);
     }
 
-    private static IPool<NativeHandle, ImageNative> ReadNatives(HlByteReader reader, uint nativeCount)
+    private static IPool<NativeHandle, ImageNative> ReadNatives<TByteReader>(ref TByteReader reader, uint nativeCount)
+        where TByteReader : IByteReader, allows ref struct
     {
         var natives = new List<ImageNative>((int)nativeCount);
         for (var i = 0; i < nativeCount; i++)
@@ -221,18 +237,19 @@ public readonly struct HlImage
         return new ImmutableListPool<NativeHandle, ImageNative>(natives);
     }
 
-    private static IPool<FunctionHandle, ImageFunction> ReadFunctions(HlByteReader reader, uint functionCount, bool debug, HlVersion version)
+    private static IPool<FunctionHandle, ImageFunction> ReadFunctions<TByteReader>(ref TByteReader reader, uint functionCount, bool debug, HlVersion version)
+        where TByteReader : IByteReader, allows ref struct
     {
         var functions = new List<ImageFunction>((int)functionCount);
         for (var i = 0; i < functionCount; i++)
         {
-            var function = ReadFunction(reader);
+            var function = ReadFunction(ref reader);
 
             if (debug)
             {
                 function = function with
                 {
-                    Debugs = ReadDebugInfo(reader, function.Opcodes.Length),
+                    Debugs = ReadDebugInfo(ref reader, function.Opcodes.Length),
                 };
             }
 
@@ -259,7 +276,8 @@ public readonly struct HlImage
         return new ImmutableListPool<FunctionHandle, ImageFunction>(functions);
     }
 
-    private static IPool<ConstantHandle, ImageConstant> ReadConstants(HlByteReader reader, uint constantCount)
+    private static IPool<ConstantHandle, ImageConstant> ReadConstants<TByteReader>(ref TByteReader reader, uint constantCount)
+        where TByteReader : IByteReader, allows ref struct
     {
         var constants = new List<ImageConstant>((int)constantCount);
         for (var i = 0; i < constantCount; i++)
@@ -280,7 +298,8 @@ public readonly struct HlImage
         return new ImmutableListPool<ConstantHandle, ImageConstant>(constants);
     }
 
-    private static List<string> ReadStringBlock(HlByteReader reader, uint stringCount)
+    private static List<string> ReadStringBlock<TByteReader>(ref TByteReader reader, uint stringCount)
+        where TByteReader : IByteReader, allows ref struct
     {
         var sizeInBytes = reader.ReadInt32();
 
@@ -305,7 +324,8 @@ public readonly struct HlImage
         return strings;
     }
 
-    private static ImageType ReadType(HlByteReader reader)
+    private static ImageType ReadType<TByteReader>(ref TByteReader reader)
+        where TByteReader : IByteReader, allows ref struct
     {
         var kind = (HlTypeKind)reader.ReadByte();
 
@@ -472,7 +492,8 @@ public readonly struct HlImage
         }
     }
 
-    private static ImageFunction ReadFunction(HlByteReader reader)
+    private static ImageFunction ReadFunction<TByteReader>(ref TByteReader reader)
+        where TByteReader : IByteReader, allows ref struct
     {
         var type = TypeHandle.From(reader.ReadIndex());
         var functionIndex = (int)reader.ReadUIndex();
@@ -487,7 +508,7 @@ public readonly struct HlImage
         var opcodes = new ImageOpcode[opcodeCount];
         for (var i = 0; i < opcodeCount; i++)
         {
-            opcodes[i] = ReadOpcode(reader);
+            opcodes[i] = ReadOpcode(ref reader);
         }
 
         return new ImageFunction(
@@ -500,7 +521,8 @@ public readonly struct HlImage
         );
     }
 
-    private static ImageOpcode ReadOpcode(HlByteReader reader)
+    private static ImageOpcode ReadOpcode<TByteReader>(ref TByteReader reader)
+        where TByteReader : IByteReader, allows ref struct
     {
         var kind = (HlOpcodeKind)reader.ReadUIndex();
 
@@ -596,7 +618,8 @@ public readonly struct HlImage
         }
     }
 
-    private static ImageFunction.Debug[] ReadDebugInfo(HlByteReader reader, int opcodeCount)
+    private static ImageFunction.Debug[] ReadDebugInfo<TByteReader>(ref TByteReader reader, int opcodeCount)
+        where TByteReader : IByteReader, allows ref struct
     {
         var debug = new ImageFunction.Debug[opcodeCount];
 

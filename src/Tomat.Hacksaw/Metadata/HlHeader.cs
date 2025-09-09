@@ -12,7 +12,8 @@ public readonly struct HlHeader(ReadOnlyMemory<byte> value) : IEquatable<HlHeade
     public ReadOnlyMemory<byte> Value { get; } = value;
 
     // TODO: Write
-    public static unsafe HlHeader Read(HlByteReader reader, HlHeader? searchHeader = null)
+    public static unsafe HlHeader Read<TByteReader>(ref TByteReader reader, HlHeader? searchHeader = null)
+        where TByteReader : IByteReader, allows ref struct
     {
         var headerSize = searchHeader.HasValue ? searchHeader.Value.Value.Length : 3;
 

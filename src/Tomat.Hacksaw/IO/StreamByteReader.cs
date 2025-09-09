@@ -16,7 +16,7 @@ namespace Tomat.Hacksaw.IO;
 ///     correct endianness).
 /// </summary>
 /// <param name="reader">The reader.</param>
-public readonly struct HlByteReader(BinaryReader reader)
+public readonly struct StreamByteReader(BinaryReader reader) : IByteReader
 {
     // BinaryReader implements its functions with LE in mind
     // (BinaryPrimitives.Read*LittleEndian), I have no idea if this is
@@ -49,7 +49,7 @@ public readonly struct HlByteReader(BinaryReader reader)
         return reader.ReadDouble();
     }
 
-    public int ReadBytes(Span<byte> buffer)
+    public int ReadBytes(scoped Span<byte> buffer)
     {
         return reader.Read(buffer);
     }

@@ -14,7 +14,8 @@ public readonly partial record struct HlVersion
     private const int min_version = 2;
     private const int max_version = 5;
 
-    public static HlVersion Read(HlByteReader reader)
+    public static HlVersion Read<TByteReader>(ref TByteReader reader)
+        where TByteReader : IByteReader, allows ref struct
     {
         var version = reader.ReadByte();
         return From(version);
