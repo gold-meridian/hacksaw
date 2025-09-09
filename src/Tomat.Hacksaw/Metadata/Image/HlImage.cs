@@ -508,7 +508,7 @@ public readonly struct HlImage
         var opcodes = new ImageOpcode[opcodeCount];
         for (var i = 0; i < opcodeCount; i++)
         {
-            opcodes[i] = ReadOpcode(ref reader);
+            opcodes[i] = OpcodeReading.ReadOpcode(ref reader);
         }
 
         return new ImageFunction(
@@ -519,103 +519,6 @@ public readonly struct HlImage
             Debugs: [],
             Assigns: []
         );
-    }
-
-    private static ImageOpcode ReadOpcode<TByteReader>(ref TByteReader reader)
-        where TByteReader : IByteReader, allows ref struct
-    {
-        var kind = (HlOpcodeKind)reader.ReadUIndex();
-
-        if (kind >= HlOpcodeKind.Last)
-        {
-            throw new InvalidDataException($"Got invalid opcode kind: {kind}");
-        }
-
-        switch (kind.GetArgumentCount())
-        {
-            case -1:
-            {
-                switch (kind)
-                {
-                    case HlOpcodeKind.CallN:
-                    case HlOpcodeKind.CallClosure:
-                    case HlOpcodeKind.CallMethod:
-                    case HlOpcodeKind.CallThis:
-                    case HlOpcodeKind.MakeEnum:
-                    {
-                        var p1 = reader.ReadIndex();
-                        var p2 = reader.ReadIndex();
-                        var p3 = (int)reader.ReadByte();
-                        var parameters = (Span<int>)stackalloc int[p3 + 4];
-                        {
-                            parameters[0] = (int)kind;
-                            parameters[1] = p1;
-                            parameters[2] = p2;
-                            parameters[3] = p3;
-                        }
-
-                        for (var i = 0; i < p3; i++)
-                        {
-                            parameters[i + 4] = reader.ReadIndex();
-                        }
-
-                        return CreateOpcode(parameters);
-                    }
-
-                    case HlOpcodeKind.Switch:
-                    {
-                        var p1 = (int)reader.ReadUIndex();
-                        var p2 = (int)reader.ReadUIndex();
-                        var parameters = (Span<int>)stackalloc int[p2 + 4];
-                        {
-                            parameters[0] = (int)kind;
-                            parameters[1] = p1;
-                            parameters[2] = p2;
-                        }
-
-                        for (var i = 0; i < p2; i++)
-                        {
-                            parameters[i + 3] = (int)reader.ReadUIndex();
-                        }
-
-                        var p3 = (int)reader.ReadUIndex();
-                        {
-                            parameters[^1] = p3;
-                        }
-
-                        return CreateOpcode(parameters);
-                    }
-
-                    default:
-                        throw new InvalidDataException($"Invalid opcode kind for variable-length decoding: {kind}");
-                }
-            }
-
-            default:
-            {
-                var size = kind.GetArgumentCount();
-                var parameters = (Span<int>)stackalloc int[size + 1];
-                {
-                    parameters[0] = (int)kind;
-                }
-
-                for (var i = 0; i < size; i++)
-                {
-                    parameters[i + 1] = reader.ReadIndex();
-                }
-
-                return CreateOpcode(parameters);
-            }
-        }
-
-        static ImageOpcode CreateOpcode(ReadOnlySpan<int> data)
-        {
-            return new ImageOpcode(
-                Ctx: new ImageOpcode.Context(
-                    Data: data.ToArray()
-                )
-            );
-        }
     }
 
     private static ImageFunction.Debug[] ReadDebugInfo<TByteReader>(ref TByteReader reader, int opcodeCount)

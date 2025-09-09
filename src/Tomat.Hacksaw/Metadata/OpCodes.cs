@@ -2,7 +2,7 @@ using System.Collections.Generic;
 
 namespace Tomat.Hacksaw.Metadata;
 
-public enum HlOpcodeKind
+public enum HlOpcodeKind : byte
 {
     Mov,
     Int,
@@ -246,18 +246,8 @@ public static class HlOpcodeKindExtensions
         { HlOpcodeKind.Last, 0 },
     };
 
-    public static readonly int[] OPCODE_ARGUMENT_COUNTS_FAST = new int[(int)HlOpcodeKind.Last + 1];
-
-    static HlOpcodeKindExtensions()
-    {
-        foreach (var (opcodeKind, count) in OPCODE_ARGUMENT_COUNTS)
-        {
-            OPCODE_ARGUMENT_COUNTS_FAST[(int)opcodeKind] = count;
-        }
-    }
-
     public static int GetArgumentCount(this HlOpcodeKind opcodeKind)
     {
-        return OPCODE_ARGUMENT_COUNTS_FAST[(int)opcodeKind];
+        return OPCODE_ARGUMENT_COUNTS[opcodeKind];
     }
 }

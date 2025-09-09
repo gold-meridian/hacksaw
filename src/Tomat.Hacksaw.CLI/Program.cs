@@ -25,6 +25,7 @@ internal static class Program
 
             Console.WriteLine($"{i}: " + sw.ElapsedMilliseconds);
             total += sw.ElapsedMilliseconds;
+            GC.Collect();
         }
 
         Console.WriteLine($"Average: {total / 10}");

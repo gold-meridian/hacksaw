@@ -1,112 +1,137 @@
 using System;
-using System.Buffers.Binary;
-using System.Diagnostics;
-using System.IO;
 using System.Runtime.CompilerServices;
 
 namespace Tomat.Hacksaw.IO;
 
-public unsafe ref struct MemoryByteReader(Span<byte> bytes) : IByteReader
+public unsafe ref struct MemoryByteReader : IByteReader
 {
-    public long Length => bytes.Length;
+    public readonly long Length
+    {
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        get => end - ptr;
+    }
 
     public long Position
     {
-        get => position;
-        set => position = (int)value;
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        readonly get => current - ptr;
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        set => current = ptr + value;
     }
 
-    private int position;
-    private readonly Span<byte> bytes = bytes;
+    private readonly byte* ptr;
+    private readonly byte* end;
+    private byte* current;
 
-    private T Read<T>()
-        where T : unmanaged
+    public MemoryByteReader(Span<byte> bytes)
     {
-        /*var size = sizeof(T);
+        fixed (byte* p = bytes)
         {
-            Debug.Assert(position + size <= bytes.Length);
-        }*/
-
-        var value = Unsafe.As<byte, T>(ref bytes[position]);
-        Position += sizeof(T);
-        return value;
+            ptr = p;
+            current = p;
+            end = p + bytes.Length;
+        }
     }
-    
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public byte ReadByte()
     {
-        return bytes[position++];
+        return *current++;
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public int ReadInt32()
     {
-        return Read<int>();
+        var result = *(int*)current;
+        current += 4;
+        return result;
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public double ReadDouble()
     {
-        return Read<double>();
+        var result = *(double*)current;
+        current += 8;
+        return result;
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public int ReadBytes(scoped Span<byte> buffer)
     {
-        var read = Math.Min(buffer.Length, bytes.Length - position);
-        bytes.Slice(position, read).CopyTo(buffer);
-        position += read;
+        var remaining = (int)(end - current);
+        var read = Math.Min(buffer.Length, remaining);
+
+        if (read > 0)
+        {
+            new ReadOnlySpan<byte>(current, read).CopyTo(buffer);
+            current += read;
+        }
+
         return read;
     }
 
     public int ReadIndex()
     {
-        var b = bytes[position++];
-        int v;
+        var p = current;
+        var b = *p++;
 
-        switch ((b >> 6) & 0b11)
+        if ((b & 0x80) == 0)
         {
-            case 0b00:
-            case 0b01:
-                return b;
-
-            case 0b10:
-                v = bytes[position++] | ((b & 0x1F) << 8);
-                break;
-
-            case 0b11:
-                v = ((b & 0x1F) << 24) | (bytes[position++] << 16) | (bytes[position++] << 8) | bytes[position++];
-                break;
-
-            default:
-                throw new InvalidOperationException($"Invalid var-int prefix: {(b >> 6) & 0b11}");
+            current = p;
+            return b;
         }
 
-        var signBit = (b >> 5) & 1;
-        return (v ^ -signBit) + signBit;
+        if ((b & 0x40) == 0)
+        {
+            var v = *p++ | ((b & 0x1F) << 8);
+            current = p;
+            
+            var signBit = (b << 26) >> 31;
+            return (v ^ signBit) - signBit;
+        }
+
+        var bytes3 = Unsafe.ReadUnaligned<int>(p) & 0x00FFFFFF;
+        var c = bytes3 & 0xFF;
+        var d = (bytes3 >> 8) & 0xFF;
+        var e = (bytes3 >> 16) & 0xFF;
+
+        var v4 = ((b & 0x1F) << 24) | (c << 16) | (d << 8) | e;
+        current = p + 3;
+
+        var signBit4 = (b << 26) >> 31;
+        return (v4 ^ signBit4) - signBit4;
     }
 
     public uint ReadUIndex()
     {
-        var b = bytes[position++];
-        uint v;
+        var p = current;
+        var b = *p++;
 
-        switch ((b >> 6) & 0b11)
+        if ((b & 0x80) == 0)
         {
-            case 0b00:
-            case 0b01:
-                return b;
-
-            case 0b10:
-                v = bytes[position++] | (uint)((b & 0x1F) << 8);
-                break;
-
-            case 0b11:
-                v = ((uint)(b & 0x1F) << 24) | (uint)(bytes[position++] << 16) | (uint)(bytes[position++] << 8) | bytes[position++];
-                break;
-
-            default:
-                throw new InvalidOperationException($"Invalid var-int prefix: {(b >> 6) & 0b11}");
+            current = p;
+            return b;
         }
 
-        Debug.Assert(((b >> 5) & 1) != 1);
-        // throw new InvalidDataException("Unsigned index read with negative value");
-        return v;
+        if ((b & 0x40) == 0)
+        {
+            var v = (uint)(*p++ | ((b & 0x1F) << 8));
+            current = p;
+
+            var mask = (uint)((b << 26) >> 31);
+            return v & ~mask;
+        }
+
+        var bytes3 = Unsafe.ReadUnaligned<uint>(p) & 0x00FFFFFF;
+        var c = bytes3 & 0xFF;
+        var d = (bytes3 >> 8) & 0xFF;
+        var e = (bytes3 >> 16) & 0xFF;
+
+        var v4 = (uint)((b & 0x1F) << 24) | (c << 16) | (d << 8) | e;
+        current = p + 3;
+
+        var mask4 = (uint)((b << 26) >> 31);
+        return v4 & ~mask4;
     }
 }
