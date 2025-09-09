@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
@@ -107,10 +108,10 @@ public readonly struct HlImage
 
     private static IPool<IntHandle, int> ReadInts(HlByteReader reader, uint intCount)
     {
-        var ints = new int[intCount];
+        var ints = new List<int>((int)intCount);
         for (var i = 0; i < intCount; i++)
         {
-            ints[i] = reader.ReadInt32();
+            ints.Add(reader.ReadInt32());
         }
 
         return new ImmutableListPool<IntHandle, int>(ints);
@@ -118,10 +119,10 @@ public readonly struct HlImage
 
     private static IPool<FloatHandle, double> ReadFloats(HlByteReader reader, uint floatCount)
     {
-        var floats = new double[floatCount];
+        var floats = new List<double>((int)floatCount);
         for (var i = 0; i < floatCount; i++)
         {
-            floats[i] = reader.ReadDouble();
+            floats.Add(reader.ReadDouble());
         }
 
         return new ImmutableListPool<FloatHandle, double>(floats);
@@ -152,7 +153,7 @@ public readonly struct HlImage
             startPositions[i] = reader.ReadUIndex();
         }*/
 
-        var byteCollections = new ByteCollection[byteCount];
+        var byteCollections = new List<ByteCollection>((int)byteCount);
         for (var i = 0; i < byteCount; i++)
         {
             var start = reader.ReadUIndex();
@@ -163,7 +164,7 @@ public readonly struct HlImage
                 length++;
             }
 
-            byteCollections[i] = new ByteCollection(bytes.AsMemory((int)start, length));
+            byteCollections.Add(new ByteCollection(bytes.AsMemory((int)start, length)));
         }
 
         return new ImmutableListPool<ByteHandle, ByteCollection>(byteCollections);
@@ -182,10 +183,10 @@ public readonly struct HlImage
 
     private static IPool<TypeHandle, ImageType> ReadTypes(HlByteReader reader, uint typeCount)
     {
-        var types = new ImageType[typeCount];
+        var types = new List<ImageType>((int)typeCount);
         for (var i = 0; i < typeCount; i++)
         {
-            types[i] = ReadType(reader);
+            types.Add(ReadType(reader));
         }
 
         return new ImmutableListPool<TypeHandle, ImageType>(types);
@@ -193,10 +194,10 @@ public readonly struct HlImage
 
     private static IPool<GlobalHandle, ImageGlobal> ReadGlobals(HlByteReader reader, uint globalCount)
     {
-        var globals = new ImageGlobal[globalCount];
+        var globals = new List<ImageGlobal>((int)globalCount);
         for (var i = 0; i < globalCount; i++)
         {
-            globals[i] = ImageGlobal.From(FunctionHandle.From(reader.ReadIndex()));
+            globals.Add(ImageGlobal.From(FunctionHandle.From(reader.ReadIndex())));
         }
 
         return new ImmutableListPool<GlobalHandle, ImageGlobal>(globals);
@@ -204,14 +205,16 @@ public readonly struct HlImage
 
     private static IPool<NativeHandle, ImageNative> ReadNatives(HlByteReader reader, uint nativeCount)
     {
-        var natives = new ImageNative[nativeCount];
+        var natives = new List<ImageNative>((int)nativeCount);
         for (var i = 0; i < nativeCount; i++)
         {
-            natives[i] = new ImageNative(
-                LibraryName: StringHandle.From(reader.ReadIndex()),
-                FunctionName: StringHandle.From(reader.ReadIndex()),
-                Type: TypeHandle.From(reader.ReadIndex()),
-                NativeIndex: reader.ReadUIndex()
+            natives.Add(
+                new ImageNative(
+                    LibraryName: StringHandle.From(reader.ReadIndex()),
+                    FunctionName: StringHandle.From(reader.ReadIndex()),
+                    Type: TypeHandle.From(reader.ReadIndex()),
+                    NativeIndex: reader.ReadUIndex()
+                )
             );
         }
 
@@ -220,7 +223,7 @@ public readonly struct HlImage
 
     private static IPool<FunctionHandle, ImageFunction> ReadFunctions(HlByteReader reader, uint functionCount, bool debug, HlVersion version)
     {
-        var functions = new ImageFunction[functionCount];
+        var functions = new List<ImageFunction>((int)functionCount);
         for (var i = 0; i < functionCount; i++)
         {
             var function = ReadFunction(reader);
@@ -250,7 +253,7 @@ public readonly struct HlImage
                 }
             }
 
-            functions[i] = function;
+            functions.Add(function);
         }
 
         return new ImmutableListPool<FunctionHandle, ImageFunction>(functions);
@@ -258,10 +261,10 @@ public readonly struct HlImage
 
     private static IPool<ConstantHandle, ImageConstant> ReadConstants(HlByteReader reader, uint constantCount)
     {
-        var constants = new ImageConstant[constantCount];
+        var constants = new List<ImageConstant>((int)constantCount);
         for (var i = 0; i < constantCount; i++)
         {
-            var constant = constants[i] = new ImageConstant(
+            var constant = new ImageConstant(
                 GlobalIndex: (int)reader.ReadUIndex(),
                 Fields: new int[reader.ReadUIndex()]
             );
@@ -270,12 +273,14 @@ public readonly struct HlImage
             {
                 constant.Fields[j] = (int)reader.ReadUIndex();
             }
+
+            constants.Add(constant);
         }
 
         return new ImmutableListPool<ConstantHandle, ImageConstant>(constants);
     }
 
-    private static string[] ReadStringBlock(HlByteReader reader, uint stringCount)
+    private static List<string> ReadStringBlock(HlByteReader reader, uint stringCount)
     {
         var sizeInBytes = reader.ReadInt32();
 
@@ -285,13 +290,13 @@ public readonly struct HlImage
             throw new InvalidDataException($"Could not read string block; not enough bytes for size: {sizeInBytes}");
         }
 
-        var strings = new string[stringCount];
+        var strings = new List<string>((int)stringCount);
 
         var offset = 0;
         for (var i = 0; i < stringCount; i++)
         {
             var stringSize = reader.ReadUIndex();
-            strings[i] = Encoding.UTF8.GetString(stringBytes.Slice(offset, (int)stringSize));
+            strings.Add(Encoding.UTF8.GetString(stringBytes.Slice(offset, (int)stringSize)));
 
             // Account for the null terminator character.
             offset += (int)stringSize + 1;
@@ -526,7 +531,7 @@ public readonly struct HlImage
                             parameters[2] = p2;
                             parameters[3] = p3;
                         }
-                        
+
                         for (var i = 0; i < p3; i++)
                         {
                             parameters[i + 4] = reader.ReadIndex();
@@ -555,7 +560,7 @@ public readonly struct HlImage
                         {
                             parameters[^1] = p3;
                         }
-                        
+
                         return CreateOpcode(parameters);
                     }
 
@@ -571,7 +576,7 @@ public readonly struct HlImage
                 {
                     parameters[0] = (int)kind;
                 }
-                
+
                 for (var i = 0; i < size; i++)
                 {
                     parameters[i + 1] = reader.ReadIndex();
@@ -597,7 +602,7 @@ public readonly struct HlImage
 
         var currFile = -1;
         var currLine = 0;
-        
+
         var currOpcode = 0;
         while (currOpcode < opcodeCount)
         {

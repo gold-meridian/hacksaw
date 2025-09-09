@@ -15,7 +15,7 @@ internal static class Program
 
         var total = 0L;
 
-        for (var i = 0; i < 10; i++)
+        for (var i = 0; i < 10000; i++)
         {
             using Stream fs = false ? File.OpenRead(args[0]) : new MemoryStream(bytes);
 
@@ -29,6 +29,6 @@ internal static class Program
             total += sw.ElapsedMilliseconds;
         }
 
-        Console.WriteLine($"Average: {total / 10}");
+        Console.WriteLine($"Average: {total / 10000}");
     }
 }
