@@ -85,13 +85,15 @@ public unsafe ref struct MemoryByteReader : IByteReader
         }
 
         p++;
+        
+        var signBit = (int)(b << 26) >> 31;
     
         if (b < 0xC0)
         {
             var v = *p | ((b & 0x1F) << 8);
             current = p + 1;
         
-            return (b & 0x20) != 0 ? -(int)v : (int)v;
+            return ((int)v ^ signBit) - signBit;
         }
     
         var chunk = *(uint*)p;
@@ -99,7 +101,7 @@ public unsafe ref struct MemoryByteReader : IByteReader
         var v4 = ((b & 0x1F) << 24) | swapped;
         current = p + 3;
     
-        return (b & 0x20) != 0 ? -(int)v4 : (int)v4;
+        return ((int)v4 ^ signBit) - signBit;
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
