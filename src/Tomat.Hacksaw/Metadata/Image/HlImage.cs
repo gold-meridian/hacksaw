@@ -310,8 +310,7 @@ public readonly struct HlImage
     {
         var sizeInBytes = reader.ReadInt32();
 
-        var stringBytes = sizeInBytes < 1024 ? stackalloc byte[sizeInBytes] : new byte[sizeInBytes];
-        if (reader.ReadBytes(stringBytes) != sizeInBytes)
+        if (reader.BorrowSlice(sizeInBytes, out var stringBytes) != sizeInBytes)
         {
             throw new InvalidDataException($"Could not read string block; not enough bytes for size: {sizeInBytes}");
         }

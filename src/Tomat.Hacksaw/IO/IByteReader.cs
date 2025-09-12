@@ -16,6 +16,8 @@ public interface IByteReader
 
     int ReadBytes(scoped Span<byte> buffer);
 
+    int BorrowSlice(int length, out Span<byte> buffer);
+
     int ReadIndex();
 
     uint ReadUIndex();

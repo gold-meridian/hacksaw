@@ -17,7 +17,7 @@ public readonly struct HlHeader(ReadOnlyMemory<byte> value) : IEquatable<HlHeade
     {
         var headerSize = searchHeader.HasValue ? searchHeader.Value.Value.Length : 3;
 
-        var headerBytes = (Span<byte>)stackalloc byte[headerSize];
+        Span<byte> headerBytes;
 
         if (searchHeader.HasValue)
         {
@@ -26,7 +26,7 @@ public readonly struct HlHeader(ReadOnlyMemory<byte> value) : IEquatable<HlHeade
 
             while (true)
             {
-                while (reader.ReadBytes(headerBytes) == headerSize)
+                while (reader.BorrowSlice(headerSize, out headerBytes) == headerSize)
                 {
                     if (headerBytes.SequenceEqual(searchHeader.Value.Value.Span))
                     {
@@ -43,7 +43,7 @@ public readonly struct HlHeader(ReadOnlyMemory<byte> value) : IEquatable<HlHeade
         // Just assume the immediate data read is the header.  Return
         // whatever data we get (invalid headers should be handled by
         // calling code).
-        if (reader.ReadBytes(headerBytes) != headerSize)
+        if (reader.BorrowSlice(headerSize, out headerBytes) != headerSize)
         {
             throw new InvalidDataException("Could not read header (not enough bytes)");
         }

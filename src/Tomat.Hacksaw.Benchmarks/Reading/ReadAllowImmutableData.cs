@@ -26,7 +26,7 @@ public class ReadAllowImmutableData
         data = File.ReadAllBytes(ImagePath);
     }
 
-    [Benchmark(Baseline = true)]
+    [Benchmark]
     public void HacksawRead()
     {
         _ = HlImage.Read(
@@ -37,7 +37,7 @@ public class ReadAllowImmutableData
         );
     }
 
-    [Benchmark]
+    [Benchmark(Baseline = true)]
     public void HacksawReadWithoutDebugInfo()
     {
         _ = HlImage.Read(

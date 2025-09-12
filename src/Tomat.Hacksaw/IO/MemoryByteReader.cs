@@ -73,6 +73,18 @@ public unsafe ref struct MemoryByteReader : IByteReader
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public int BorrowSlice(int length, out Span<byte> buffer)
+    {
+        var remaining = (int)(end - current);
+        var read = Math.Min(length, remaining);
+
+        buffer = new Span<byte>(current, read);
+        current += read;
+
+        return read;
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public int ReadIndex()
     {
         var p = current;
@@ -85,22 +97,22 @@ public unsafe ref struct MemoryByteReader : IByteReader
         }
 
         p++;
-        
+
         var signBit = (int)(b << 26) >> 31;
-    
+
         if (b < 0xC0)
         {
             var v = *p | ((b & 0x1F) << 8);
             current = p + 1;
-        
+
             return ((int)v ^ signBit) - signBit;
         }
-    
+
         var chunk = *(uint*)p;
         var swapped = BinaryPrimitives.ReverseEndianness(chunk) >> 8;
         var v4 = ((b & 0x1F) << 24) | swapped;
         current = p + 3;
-    
+
         return ((int)v4 ^ signBit) - signBit;
     }
 

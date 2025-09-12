@@ -52,6 +52,12 @@ public readonly struct StreamByteReader(BinaryReader reader) : IByteReader
         return reader.Read(buffer);
     }
 
+    public int BorrowSlice(int length, out Span<byte> buffer)
+    {
+        buffer = new byte[length];
+        return reader.Read(buffer);
+    }
+
     public int ReadIndex()
     {
         var b = reader.ReadByte();
