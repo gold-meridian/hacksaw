@@ -13,7 +13,8 @@ namespace Tomat.Hacksaw.Metadata.Image;
 public readonly struct HlImage
 {
     public readonly record struct ReadSettings(
-        bool StoreDebugInfo = true
+        bool StoreDebugInfo = true,
+        bool StoreFunctionAssigns = true
     );
 
     public required HlHeader Header { get; init; }
@@ -262,18 +263,31 @@ public readonly struct HlImage
 
             if (version >= HlVersion.FEATURE_FUNC_ASSIGNS)
             {
+                var storeAssigns = settings.StoreFunctionAssigns;
+
                 var assignCount = reader.ReadUIndex();
                 function = function with
                 {
-                    Assigns = new ImageFunction.Assign[assignCount],
+                    Assigns = storeAssigns ? new ImageFunction.Assign[assignCount] : null,
                 };
 
-                for (var j = 0; j < assignCount; j++)
+                if (function.Assigns is not null)
                 {
-                    function.Assigns[j] = new ImageFunction.Assign(
-                        Name: StringHandle.From((int)reader.ReadUIndex()),
-                        Index: reader.ReadIndex()
-                    );
+                    for (var j = 0; j < assignCount; j++)
+                    {
+                        function.Assigns[j] = new ImageFunction.Assign(
+                            Name: StringHandle.From((int)reader.ReadUIndex()),
+                            Index: reader.ReadIndex()
+                        );
+                    }
+                }
+                else
+                {
+                    for (var j = 0; j < assignCount; j++)
+                    {
+                        _ = reader.ReadUIndex();
+                        _ = reader.ReadIndex();
+                    }
                 }
             }
 

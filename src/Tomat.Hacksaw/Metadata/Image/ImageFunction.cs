@@ -24,7 +24,7 @@ public readonly record struct ImageFunction(
     TypeHandle[] VariableTypes,
     ImageOpcode[] Opcodes,
     ImageFunction.Debug[]? Debugs,
-    ImageFunction.Assign[] Assigns
+    ImageFunction.Assign[]? Assigns
 )
 {
     public readonly record struct Debug(

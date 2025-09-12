@@ -38,12 +38,13 @@ public class ReadAllowImmutableData
     }
 
     [Benchmark(Baseline = true)]
-    public void HacksawReadWithoutDebugInfo()
+    public void HacksawReadSlim()
     {
         _ = HlImage.Read(
             data,
             new HlImage.ReadSettings(
-                StoreDebugInfo: false
+                StoreDebugInfo: false,
+                StoreFunctionAssigns: false
             )
         );
     }

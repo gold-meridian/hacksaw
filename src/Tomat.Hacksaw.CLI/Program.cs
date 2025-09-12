@@ -19,7 +19,13 @@ internal static class Program
         {
             sw.Restart();
             {
-                HlImage.Read(bytes, new HlImage.ReadSettings(StoreDebugInfo: false));
+                HlImage.Read(
+                    bytes,
+                    new HlImage.ReadSettings(
+                        StoreDebugInfo: false,
+                        StoreFunctionAssigns: false
+                    )
+                );
             }
             sw.Stop();
 
