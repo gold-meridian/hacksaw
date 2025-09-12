@@ -68,7 +68,6 @@ internal static class OpcodeReading
         return default(ImageOpcode);
     }
 
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private static ImageOpcode ReadFixedSizeOpcode<TByteReader>(ref TByteReader reader, HlOpcodeKind kind, int argCount)
         where TByteReader : IByteReader, allows ref struct
     {
@@ -109,7 +108,6 @@ internal static class OpcodeReading
         return CreateOpcode(data);
     }
 
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private static ImageOpcode ReadVariableLengthOpcode<TByteReader>(ref TByteReader reader, HlOpcodeKind kind)
         where TByteReader : IByteReader, allows ref struct
     {
@@ -134,7 +132,6 @@ internal static class OpcodeReading
         return CreateOpcode(data);
     }
 
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private static ImageOpcode ReadSwitchOpcode<TByteReader>(ref TByteReader reader)
         where TByteReader : IByteReader, allows ref struct
     {

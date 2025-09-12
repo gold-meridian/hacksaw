@@ -29,7 +29,23 @@ public class ReadAllowImmutableData
     [Benchmark(Baseline = true)]
     public void HacksawRead()
     {
-        _ = HlImage.Read(data);
+        _ = HlImage.Read(
+            data,
+            new HlImage.ReadSettings(
+                StoreDebugInfo: true
+            )
+        );
+    }
+
+    [Benchmark]
+    public void HacksawReadWithoutDebugInfo()
+    {
+        _ = HlImage.Read(
+            data,
+            new HlImage.ReadSettings(
+                StoreDebugInfo: false
+            )
+        );
     }
 
     /*[Benchmark]

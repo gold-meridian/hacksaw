@@ -12,6 +12,10 @@ namespace Tomat.Hacksaw.Metadata.Image;
 /// </summary>
 public readonly struct HlImage
 {
+    public readonly record struct ReadSettings(
+        bool StoreDebugInfo = true
+    );
+
     public required HlHeader Header { get; init; }
 
     public required HlVersion Version { get; init; }
@@ -42,25 +46,25 @@ public readonly struct HlImage
 
     public required FunctionHandle Entrypoint { get; init; }
 
-    public static HlImage Read(Stream stream)
+    public static HlImage Read(Stream stream, ReadSettings settings)
     {
         using var br = new BinaryReader(stream);
-        return Read(br);
+        return Read(br, settings);
     }
 
-    public static HlImage Read(BinaryReader reader)
+    public static HlImage Read(BinaryReader reader, ReadSettings settings)
     {
         var sReader = new StreamByteReader(reader);
-        return Read(ref sReader);
+        return Read(ref sReader, settings);
     }
 
-    public static HlImage Read(byte[] data)
+    public static HlImage Read(byte[] data, ReadSettings settings)
     {
         var reader = new MemoryByteReader(data);
-        return Read(ref reader);
+        return Read(ref reader, settings);
     }
 
-    public static HlImage Read<TByteReader>(ref TByteReader reader)
+    public static HlImage Read<TByteReader>(ref TByteReader reader, ReadSettings settings)
         where TByteReader : IByteReader, allows ref struct
     {
         var header = HlHeader.Read(ref reader, HlHeader.HLB);
@@ -91,7 +95,7 @@ public readonly struct HlImage
         var typePool = ReadTypes(ref reader, typeCount);
         var globalPool = ReadGlobals(ref reader, globalCount);
         var nativePool = ReadNatives(ref reader, nativeCount);
-        var functionPool = ReadFunctions(ref reader, functionCount, flags.HasFlag(HlFlags.Debug), version);
+        var functionPool = ReadFunctions(ref reader, functionCount, flags.HasFlag(HlFlags.Debug), version, settings);
         var constantPool = ReadConstants(ref reader, constantCount);
 
         return new HlImage
@@ -234,7 +238,13 @@ public readonly struct HlImage
         return new ImmutablePool<NativeHandle, ImageNative>(natives);
     }
 
-    private static ImmutablePool<FunctionHandle, ImageFunction> ReadFunctions<TByteReader>(ref TByteReader reader, uint functionCount, bool debug, HlVersion version)
+    private static ImmutablePool<FunctionHandle, ImageFunction> ReadFunctions<TByteReader>(
+        ref TByteReader reader,
+        uint functionCount,
+        bool debug,
+        HlVersion version,
+        ReadSettings settings
+    )
         where TByteReader : IByteReader, allows ref struct
     {
         var functions = new ImageFunction[functionCount];
@@ -246,7 +256,7 @@ public readonly struct HlImage
             {
                 function = function with
                 {
-                    Debugs = ReadDebugInfo(ref reader, function.Opcodes.Length),
+                    Debugs = ReadDebugInfo(ref reader, function.Opcodes.Length, settings.StoreDebugInfo),
                 };
             }
 
@@ -518,10 +528,14 @@ public readonly struct HlImage
         );
     }
 
-    private static ImageFunction.Debug[] ReadDebugInfo<TByteReader>(ref TByteReader reader, int opcodeCount)
+    private static ImageFunction.Debug[]? ReadDebugInfo<TByteReader>(
+        ref TByteReader reader,
+        int opcodeCount,
+        bool storeInfo
+    )
         where TByteReader : IByteReader, allows ref struct
     {
-        var debug = new ImageFunction.Debug[opcodeCount];
+        var debug = storeInfo ? new ImageFunction.Debug[opcodeCount] : null;
 
         var currFile = -1;
         var currLine = 0;
@@ -552,10 +566,13 @@ public readonly struct HlImage
 
                 while (count-- > 0)
                 {
-                    debug[currOpcode] = new ImageFunction.Debug(
-                        DebugFileHandle.From(currFile),
-                        currLine
-                    );
+                    if (debug is not null)
+                    {
+                        debug[currOpcode] = new ImageFunction.Debug(
+                            DebugFileHandle.From(currFile),
+                            currLine
+                        );
+                    }
 
                     currOpcode++;
                 }
@@ -565,10 +582,13 @@ public readonly struct HlImage
             else if ((c & 4) != 0)
             {
                 currLine += c >> 3;
-                debug[currOpcode] = new ImageFunction.Debug(
-                    DebugFileHandle.From(currFile),
-                    currLine
-                );
+                if (debug is not null)
+                {
+                    debug[currOpcode] = new ImageFunction.Debug(
+                        DebugFileHandle.From(currFile),
+                        currLine
+                    );
+                }
                 currOpcode++;
             }
             else
@@ -576,10 +596,13 @@ public readonly struct HlImage
                 var b2 = reader.ReadByte();
                 var b3 = reader.ReadByte();
                 currLine = (c >> 3) | (b2 << 5) | (b3 << 13);
-                debug[currOpcode] = new ImageFunction.Debug(
-                    DebugFileHandle.From(currFile),
-                    currLine
-                );
+                if (debug is not null)
+                {
+                    debug[currOpcode] = new ImageFunction.Debug(
+                        DebugFileHandle.From(currFile),
+                        currLine
+                    );
+                }
                 currOpcode++;
             }
         }
