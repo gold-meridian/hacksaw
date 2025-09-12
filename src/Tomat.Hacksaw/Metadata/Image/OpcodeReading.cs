@@ -69,11 +69,11 @@ internal static class OpcodeReading
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static unsafe ImageOpcode ReadFixedSizeOpcode<TByteReader>(ref TByteReader reader, HlOpcodeKind kind, int argCount)
+    private static ImageOpcode ReadFixedSizeOpcode<TByteReader>(ref TByteReader reader, HlOpcodeKind kind, int argCount)
         where TByteReader : IByteReader, allows ref struct
     {
         var totalSize = argCount + 1;
-        var data = stackalloc int[totalSize];
+        var data = new int[totalSize];
         {
             data[0] = (int)kind;
         }
@@ -106,11 +106,11 @@ internal static class OpcodeReading
                 break;
         }
 
-        return CreateOpcodeUnsafe(data, totalSize);
+        return CreateOpcode(data);
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static unsafe ImageOpcode ReadVariableLengthOpcode<TByteReader>(ref TByteReader reader, HlOpcodeKind kind)
+    private static ImageOpcode ReadVariableLengthOpcode<TByteReader>(ref TByteReader reader, HlOpcodeKind kind)
         where TByteReader : IByteReader, allows ref struct
     {
         var p1 = reader.ReadIndex();
@@ -118,7 +118,7 @@ internal static class OpcodeReading
         var p3 = (int)reader.ReadByte();
 
         var totalSize = p3 + 4;
-        var data = stackalloc int[totalSize];
+        var data = new int[totalSize];
         {
             data[0] = (int)kind;
             data[1] = p1;
@@ -131,18 +131,18 @@ internal static class OpcodeReading
             data[i + 4] = reader.ReadIndex();
         }
 
-        return CreateOpcodeUnsafe(data, totalSize);
+        return CreateOpcode(data);
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static unsafe ImageOpcode ReadSwitchOpcode<TByteReader>(ref TByteReader reader)
+    private static ImageOpcode ReadSwitchOpcode<TByteReader>(ref TByteReader reader)
         where TByteReader : IByteReader, allows ref struct
     {
         var p1 = (int)reader.ReadUIndex();
         var p2 = (int)reader.ReadUIndex();
 
         var totalSize = p2 + 4;
-        var data = stackalloc int[totalSize];
+        var data = new int[totalSize];
         {
             data[0] = (int)HlOpcodeKind.Switch;
             data[1] = p1;
@@ -159,22 +159,16 @@ internal static class OpcodeReading
             data[totalSize - 1] = p3;
         }
 
-        return CreateOpcodeUnsafe(data, totalSize);
+        return CreateOpcode(data);
     }
 
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static unsafe ImageOpcode CreateOpcodeUnsafe(int* data, int length)
+    private static ImageOpcode CreateOpcode(int[] data)
     {
-        var array = new int[length];
-        fixed (int* pDest = array)
-        {
-            Buffer.MemoryCopy(data, pDest, length * sizeof(int), length * sizeof(int));
-        }
-
         return new ImageOpcode(
             Ctx: new ImageOpcode.Context(
-                Data: array
+                Data: data
             )
         );
     }

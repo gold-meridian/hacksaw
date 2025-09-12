@@ -11,11 +11,15 @@ namespace Tomat.Hacksaw.Benchmarks.Reading;
 [MemoryDiagnoser]
 public class ReadAllowImmutableData
 {
-    [Params("binaries/hello.hl", "C:/Program Files (x86)/Steam/steamapps/common/Dead Cells/deadcells.exe", "C:/Program Files (x86)/Steam/steamapps/common/Dead Cells/HLBOOT.DAT")]
-    public string ImagePath;
+    [Params(
+        "binaries/hello.hl",
+        // "C:/Program Files (x86)/Steam/steamapps/common/Dead Cells/deadcells.exe",
+        "C:/Program Files (x86)/Steam/steamapps/common/Dead Cells/HLBOOT.DAT"
+    )]
+    public string ImagePath { get; set; } = null!;
 
-    private byte[] data;
-    
+    private byte[] data = null!;
+
     [GlobalSetup]
     public void Setup()
     {
@@ -28,27 +32,21 @@ public class ReadAllowImmutableData
         _ = HlImage.Read(data);
     }
 
-    [Benchmark]
+    /*[Benchmark]
     public void SharplinkRead()
     {
         _ = SharpLink.HlCode.FromBytes(data);
-    }
-    
+    }*/
+
     [Benchmark]
     public void HaxelinkRead()
     {
         _ = new Bytecode(ImagePath);
     }
-    
+
     [Benchmark]
     public void DccmHashlinkNetRead()
     {
         _ = HashlinkNET.Bytecode.HlCode.FromBytes(data);
-    }
-    
-    [Benchmark()]
-    public void ZzzHacksawRead()
-    {
-        _ = HlImage.Read(data);
     }
 }
