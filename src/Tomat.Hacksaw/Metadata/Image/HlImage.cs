@@ -255,24 +255,30 @@ public readonly struct HlImage
 
             if (debug)
             {
-                function = function with
+                if (settings.StoreDebugInfo)
                 {
-                    Debugs = ReadDebugInfo(ref reader, function.Opcodes.Length, settings.StoreDebugInfo),
-                };
+                    function = function with
+                    {
+                        Debugs = ReadDebugInfo(ref reader, function.Opcodes.Length),
+                    };
+                }
+                else
+                {
+                    SkipDebugInfo(ref reader, function.Opcodes.Length);
+                }
             }
 
             if (version >= HlVersion.FEATURE_FUNC_ASSIGNS)
             {
-                var storeAssigns = settings.StoreFunctionAssigns;
-
                 var assignCount = reader.ReadUIndex();
-                function = function with
-                {
-                    Assigns = storeAssigns ? new ImageFunction.Assign[assignCount] : null,
-                };
 
-                if (function.Assigns is not null)
+                if (settings.StoreFunctionAssigns)
                 {
+                    function = function with
+                    {
+                        Assigns = new ImageFunction.Assign[assignCount],
+                    };
+
                     for (var j = 0; j < assignCount; j++)
                     {
                         function.Assigns[j] = new ImageFunction.Assign(
@@ -285,8 +291,8 @@ public readonly struct HlImage
                 {
                     for (var j = 0; j < assignCount; j++)
                     {
-                        _ = reader.ReadUIndex();
-                        _ = reader.ReadIndex();
+                        reader.SkipIndex();
+                        reader.SkipIndex();
                     }
                 }
             }
@@ -541,14 +547,13 @@ public readonly struct HlImage
         );
     }
 
-    private static ImageFunction.Debug[]? ReadDebugInfo<TByteReader>(
+    private static ImageFunction.Debug[] ReadDebugInfo<TByteReader>(
         ref TByteReader reader,
-        int opcodeCount,
-        bool storeInfo
+        int opcodeCount
     )
         where TByteReader : IByteReader, allows ref struct
     {
-        var debug = storeInfo ? new ImageFunction.Debug[opcodeCount] : null;
+        var debug = new ImageFunction.Debug[opcodeCount];
 
         var currFile = -1;
         var currLine = 0;
@@ -562,11 +567,6 @@ public readonly struct HlImage
             {
                 c >>= 1;
                 currFile = (c << 8) | reader.ReadByte();
-
-                /*if (currFile >= code.DebugFiles.Count)
-                {
-                    throw new InvalidDataException($"Invalid debug file index: {currFile}");
-                }*/
             }
             else if ((c & 2) != 0)
             {
@@ -579,13 +579,10 @@ public readonly struct HlImage
 
                 while (count-- > 0)
                 {
-                    if (debug is not null)
-                    {
-                        debug[currOpcode] = new ImageFunction.Debug(
-                            DebugFileHandle.From(currFile),
-                            currLine
-                        );
-                    }
+                    debug[currOpcode] = new ImageFunction.Debug(
+                        DebugFileHandle.From(currFile),
+                        currLine
+                    );
 
                     currOpcode++;
                 }
@@ -595,13 +592,10 @@ public readonly struct HlImage
             else if ((c & 4) != 0)
             {
                 currLine += c >> 3;
-                if (debug is not null)
-                {
-                    debug[currOpcode] = new ImageFunction.Debug(
-                        DebugFileHandle.From(currFile),
-                        currLine
-                    );
-                }
+                debug[currOpcode] = new ImageFunction.Debug(
+                    DebugFileHandle.From(currFile),
+                    currLine
+                );
                 currOpcode++;
             }
             else
@@ -609,17 +603,54 @@ public readonly struct HlImage
                 var b2 = reader.ReadByte();
                 var b3 = reader.ReadByte();
                 currLine = (c >> 3) | (b2 << 5) | (b3 << 13);
-                if (debug is not null)
-                {
-                    debug[currOpcode] = new ImageFunction.Debug(
-                        DebugFileHandle.From(currFile),
-                        currLine
-                    );
-                }
+                debug[currOpcode] = new ImageFunction.Debug(
+                    DebugFileHandle.From(currFile),
+                    currLine
+                );
                 currOpcode++;
             }
         }
 
         return debug;
+    }
+
+    private static void SkipDebugInfo<TByteReader>(
+        ref TByteReader reader,
+        int opcodeCount
+    )
+        where TByteReader : IByteReader, allows ref struct
+    {
+        var currOpcode = 0;
+        while (currOpcode < opcodeCount)
+        {
+            var c = reader.ReadByte();
+
+            if ((c & 1) != 0)
+            {
+                reader.Position++;
+            }
+            else if ((c & 2) != 0)
+            {
+                var count = (c >> 2) & 15;
+                if (currOpcode + count > opcodeCount)
+                {
+                    throw new InvalidDataException($"Invalid debug line count: {count}");
+                }
+
+                while (count-- > 0)
+                {
+                    currOpcode++;
+                }
+            }
+            else if ((c & 4) != 0)
+            {
+                currOpcode++;
+            }
+            else
+            {
+                reader.Position += 2;
+                currOpcode++;
+            }
+        }
     }
 }

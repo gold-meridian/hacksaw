@@ -164,4 +164,27 @@ public readonly struct StreamByteReader(BinaryReader reader) : IByteReader
         // throw new InvalidDataException("Unsigned index read with negative value");
         return v;
     }
+
+    public void SkipIndex()
+    {
+        var b = reader.ReadByte();
+
+        switch ((b >> 6) & 0b11)
+        {
+            case 0b00:
+            case 0b01:
+                return;
+
+            case 0b10:
+                Position++;
+                return;
+
+            case 0b11:
+                Position += 3;
+                return;
+
+            default:
+                throw new InvalidOperationException($"Invalid var-int prefix: {(b >> 6) & 0b11}");
+        }
+    }
 }

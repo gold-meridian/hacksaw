@@ -21,4 +21,6 @@ public interface IByteReader
     int ReadIndex();
 
     uint ReadUIndex();
+
+    void SkipIndex();
 }

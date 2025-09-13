@@ -121,4 +121,25 @@ public unsafe ref struct MemoryByteReader : IByteReader
     {
         return (uint)ReadIndex();
     }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public void SkipIndex()
+    {
+        uint b = *current;
+
+        switch (b)
+        {
+            case < 0x80:
+                current++;
+                return;
+
+            case < 0xC0:
+                current += 2;
+                return;
+
+            default:
+                current += 4;
+                break;
+        }
+    }
 }
