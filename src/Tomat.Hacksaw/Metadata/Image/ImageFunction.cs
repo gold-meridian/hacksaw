@@ -9,13 +9,13 @@ namespace Tomat.Hacksaw.Metadata.Image;
 // https://github.com/dead-cells-core-modding/core/blob/main/sources/HashlinkNET.Bytecode/HlFunction.cs#L119
 public readonly record struct ImageOpcode(ImageOpcode.Context Ctx)
 {
-    public readonly record struct Context(int[] Data);
+    public readonly record struct Context(Memory<int> Data);
     
     public HlOpcodeKind Kind => (HlOpcodeKind)Data[0];
 
     public ReadOnlySpan<int> Parameters => Data[1..];
 
-    public ReadOnlySpan<int> Data => Ctx.Data;
+    public ReadOnlySpan<int> Data => Ctx.Data.Span;
 }
 
 public readonly record struct ImageFunction(

@@ -72,9 +72,10 @@ internal static class OpcodeReading
         where TByteReader : IByteReader, allows ref struct
     {
         var totalSize = argCount + 1;
-        var data = new int[totalSize];
+        var data = AllocBytes(totalSize);
+        var pData = data.Span;
         {
-            data[0] = (int)kind;
+            pData[0] = (int)kind;
         }
 
         switch (argCount)
@@ -83,24 +84,24 @@ internal static class OpcodeReading
                 break;
 
             case 1:
-                data[1] = reader.ReadIndex();
+                pData[1] = reader.ReadIndex();
                 break;
 
             case 2:
-                data[1] = reader.ReadIndex();
-                data[2] = reader.ReadIndex();
+                pData[1] = reader.ReadIndex();
+                pData[2] = reader.ReadIndex();
                 break;
 
             case 3:
-                data[1] = reader.ReadIndex();
-                data[2] = reader.ReadIndex();
-                data[3] = reader.ReadIndex();
+                pData[1] = reader.ReadIndex();
+                pData[2] = reader.ReadIndex();
+                pData[3] = reader.ReadIndex();
                 break;
 
             default:
                 for (var i = 0; i < argCount; i++)
                 {
-                    data[i + 1] = reader.ReadIndex();
+                    pData[i + 1] = reader.ReadIndex();
                 }
                 break;
         }
@@ -116,17 +117,18 @@ internal static class OpcodeReading
         var p3 = (int)reader.ReadByte();
 
         var totalSize = p3 + 4;
-        var data = new int[totalSize];
+        var data = AllocBytes(totalSize);
+        var pData = data.Span;
         {
-            data[0] = (int)kind;
-            data[1] = p1;
-            data[2] = p2;
-            data[3] = p3;
+            pData[0] = (int)kind;
+            pData[1] = p1;
+            pData[2] = p2;
+            pData[3] = p3;
         }
 
         for (var i = 0; i < p3; i++)
         {
-            data[i + 4] = reader.ReadIndex();
+            pData[i + 4] = reader.ReadIndex();
         }
 
         return CreateOpcode(data);
@@ -139,29 +141,56 @@ internal static class OpcodeReading
         var p2 = (int)reader.ReadUIndex();
 
         var totalSize = p2 + 4;
-        var data = new int[totalSize];
+        var data = AllocBytes(totalSize);
+        var pData = data.Span;
         {
-            data[0] = (int)HlOpcodeKind.Switch;
-            data[1] = p1;
-            data[2] = p2;
+            pData[0] = (int)HlOpcodeKind.Switch;
+            pData[1] = p1;
+            pData[2] = p2;
         }
 
         for (var i = 0; i < p2; i++)
         {
-            data[i + 3] = (int)reader.ReadUIndex();
+            pData[i + 3] = (int)reader.ReadUIndex();
         }
 
         var p3 = (int)reader.ReadUIndex();
         {
-            data[totalSize - 1] = p3;
+            pData[totalSize - 1] = p3;
         }
 
         return CreateOpcode(data);
     }
 
+    private const int pool_size = 1024;
+    private static int[] pool = new int[pool_size];
+    private static int pool_index;
+    
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static Memory<int> AllocBytes(int size)
+    {
+        if (size > pool_size)
+        {
+            return new int[size];
+        }
+
+        if (pool_index + size > pool_size)
+        {
+            pool = new int[pool_size];
+            pool_index = 0;
+        }
+        
+        var bytes = pool.AsMemory(pool_index, size);
+        {
+            pool_index += size;
+        }
+
+        return bytes;
+    }
+
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static ImageOpcode CreateOpcode(int[] data)
+    private static ImageOpcode CreateOpcode(Memory<int> data)
     {
         return new ImageOpcode(
             Ctx: new ImageOpcode.Context(
