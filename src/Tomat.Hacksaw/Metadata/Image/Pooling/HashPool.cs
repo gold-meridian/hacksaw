@@ -21,7 +21,7 @@ public sealed class HashPool<THandle, TElement> : IPool<THandle, TElement>
 
         foreach (var element in elements)
         {
-            var handle = THandle.DangerouslyCreateHandleForPool(i++);
+            var handle = THandle.From(i++);
             handleLookup.Add(handle, element);
             elementLookup.Add(element, handle);
         }
@@ -46,7 +46,7 @@ public sealed class HashPool<THandle, TElement> : IPool<THandle, TElement>
             return handle;
         }
 
-        handle = THandle.DangerouslyCreateHandleForPool(elementLookup.Count);
+        handle = THandle.From(elementLookup.Count);
         {
             handleLookup.Add(handle, item);
             elementLookup.Add(item, handle);

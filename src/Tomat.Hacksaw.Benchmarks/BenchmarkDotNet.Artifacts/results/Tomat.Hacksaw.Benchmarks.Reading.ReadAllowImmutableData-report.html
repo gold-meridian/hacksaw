@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+<meta charset='utf-8' />
+<title>Tomat.Hacksaw.Benchmarks.Reading.ReadAllowImmutableData-20250928-041823</title>
+
+<style type="text/css">
+	table { border-collapse: collapse; display: block; width: 100%; overflow: auto; }
+	td, th { padding: 6px 13px; border: 1px solid #ddd; text-align: right; }
+	tr { background-color: #fff; border-top: 1px solid #ccc; }
+	tr:nth-child(even) { background: #f8f8f8; }
+</style>
+</head>
+<body>
+<pre><code>
+BenchmarkDotNet v0.15.2, Windows 11 (10.0.26100.6584/24H2/2024Update/HudsonValley)
+Unknown processor
+.NET SDK 10.0.100-rc.1.25451.107
+  [Host]     : .NET 10.0.0 (10.0.25.45207), X64 RyuJIT AVX2
+  DefaultJob : .NET 10.0.0 (10.0.25.45207), X64 RyuJIT AVX2
+</code></pre>
+<pre><code></code></pre>
+
+<table>
+<thead><tr><th>Method       </th><th>ImagePath     </th><th>Mean  </th><th>Error </th><th>StdDev</th><th>Ratio</th><th>RatioSD</th><th>Gen0</th><th>Gen1</th><th>Gen2</th><th>Allocated</th><th>Alloc Ratio</th>
+</tr>
+</thead><tbody><tr><td>HacksawRead</td><td>binaries/hello.hl</td><td>202.5 &mu;s</td><td>3.02 &mu;s</td><td>2.83 &mu;s</td><td>0.98</td><td>0.02</td><td>333.2520</td><td>333.2520</td><td>333.2520</td><td>1326.65 KB</td><td>1.08</td>
+</tr><tr><td>HacksawReadSlim</td><td>binaries/hello.hl</td><td>206.8 &mu;s</td><td>3.91 &mu;s</td><td>4.01 &mu;s</td><td>1.00</td><td>0.03</td><td>333.2520</td><td>333.2520</td><td>333.2520</td><td>1233.19 KB</td><td>1.00</td>
+</tr><tr><td>HaxelinkRead</td><td>binaries/hello.hl</td><td>301.2 &mu;s</td><td>4.07 &mu;s</td><td>3.40 &mu;s</td><td>1.46</td><td>0.03</td><td>100.5859</td><td>75.1953</td><td>-</td><td>824.19 KB</td><td>0.67</td>
+</tr><tr><td>DccmHashlinkNetRead</td><td>binaries/hello.hl</td><td>347.5 &mu;s</td><td>6.79 &mu;s</td><td>8.08 &mu;s</td><td>1.68</td><td>0.05</td><td>107.9102</td><td>78.6133</td><td>-</td><td>881.63 KB</td><td>0.71</td>
+</tr><tr><td>HacksawRead</td><td>C:/Pr(...)T.DAT [67]</td><td>197,872.1 &mu;s</td><td>3,532.21 &mu;s</td><td>3,131.21 &mu;s</td><td>1.32</td><td>0.02</td><td>15333.3333</td><td>15000.0000</td><td>2000.0000</td><td>166217.37 KB</td><td>1.38</td>
+</tr><tr><td>HacksawReadSlim</td><td>C:/Pr(...)T.DAT [67]</td><td>149,808.5 &mu;s</td><td>1,975.65 &mu;s</td><td>1,649.76 &mu;s</td><td>1.00</td><td>0.02</td><td>9666.6667</td><td>9333.3333</td><td>2000.0000</td><td>120155.9 KB</td><td>1.00</td>
+</tr><tr><td>HaxelinkRead</td><td>C:/Pr(...)T.DAT [67]</td><td>627,516.4 &mu;s</td><td>10,437.66 &mu;s</td><td>9,252.72 &mu;s</td><td>4.19</td><td>0.07</td><td>47000.0000</td><td>46000.0000</td><td>5000.0000</td><td>391650.15 KB</td><td>3.26</td>
+</tr><tr><td>DccmHashlinkNetRead</td><td>C:/Pr(...)T.DAT [67]</td><td>487,409.4 &mu;s</td><td>8,866.88 &mu;s</td><td>11,529.44 &mu;s</td><td>3.25</td><td>0.08</td><td>43000.0000</td><td>24000.0000</td><td>4000.0000</td><td>335763.16 KB</td><td>2.79</td>
+</tr></tbody></table>
+</body>
+</html>

@@ -1,4 +1,4 @@
-using Vogen;
+using System.Runtime.CompilerServices;
 
 namespace Tomat.Hacksaw.Metadata.Image.Pooling;
 
@@ -7,395 +7,95 @@ public interface IHandle<out THandle>
 {
     int Value { get; }
 
-    static abstract THandle DangerouslyCreateHandleForPool(int value);
+    static abstract THandle From(int value);
 }
 
-[ValueObject<int>]
-public readonly partial record struct IntHandle : IHandle<IntHandle>
+public readonly record struct IntHandle(int Value) : IHandle<IntHandle>
 {
-    public static bool operator <(IntHandle left, IntHandle right)
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static IntHandle From(int value)
     {
-        return left.CompareTo(right) < 0;
-    }
-
-    public static bool operator <=(IntHandle left, IntHandle right)
-    {
-        return left.CompareTo(right) <= 0;
-    }
-
-    public static bool operator >(IntHandle left, IntHandle right)
-    {
-        return left.CompareTo(right) > 0;
-    }
-
-    public static bool operator >=(IntHandle left, IntHandle right)
-    {
-        return left.CompareTo(right) >= 0;
-    }
-
-    private static int NormalizeInput(int input)
-    {
-        return input;
-    }
-
-    private static Validation Validate(int input)
-    {
-        return input >= 0 ? Validation.Ok : Validation.Invalid("Handle cannot reference negative element");
-    }
-
-    public static IntHandle DangerouslyCreateHandleForPool(int value)
-    {
-        return From(value);
+        return new IntHandle(value);
     }
 }
 
-[ValueObject<int>]
-public readonly partial record struct FloatHandle : IHandle<FloatHandle>
+public readonly record struct FloatHandle(int Value) : IHandle<FloatHandle>
 {
-    public static bool operator <(FloatHandle left, FloatHandle right)
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static FloatHandle From(int value)
     {
-        return left.CompareTo(right) < 0;
-    }
-
-    public static bool operator <=(FloatHandle left, FloatHandle right)
-    {
-        return left.CompareTo(right) <= 0;
-    }
-
-    public static bool operator >(FloatHandle left, FloatHandle right)
-    {
-        return left.CompareTo(right) > 0;
-    }
-
-    public static bool operator >=(FloatHandle left, FloatHandle right)
-    {
-        return left.CompareTo(right) >= 0;
-    }
-
-    private static int NormalizeInput(int input)
-    {
-        return input;
-    }
-
-    private static Validation Validate(int input)
-    {
-        return input >= 0 ? Validation.Ok : Validation.Invalid("Handle cannot reference negative element");
-    }
-
-    public static FloatHandle DangerouslyCreateHandleForPool(int value)
-    {
-        return From(value);
+        return new FloatHandle(value);
     }
 }
 
-[ValueObject<int>]
-public readonly partial record struct StringHandle : IHandle<StringHandle>
+public readonly record struct StringHandle(int Value) : IHandle<StringHandle>
 {
-    public static bool operator <(StringHandle left, StringHandle right)
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static StringHandle From(int value)
     {
-        return left.CompareTo(right) < 0;
-    }
-
-    public static bool operator <=(StringHandle left, StringHandle right)
-    {
-        return left.CompareTo(right) <= 0;
-    }
-
-    public static bool operator >(StringHandle left, StringHandle right)
-    {
-        return left.CompareTo(right) > 0;
-    }
-
-    public static bool operator >=(StringHandle left, StringHandle right)
-    {
-        return left.CompareTo(right) >= 0;
-    }
-
-    private static int NormalizeInput(int input)
-    {
-        return input;
-    }
-
-    private static Validation Validate(int input)
-    {
-        return input >= 0 ? Validation.Ok : Validation.Invalid("Handle cannot reference negative element");
-    }
-
-    public static StringHandle DangerouslyCreateHandleForPool(int value)
-    {
-        return From(value);
+        return new StringHandle(value);
     }
 }
 
-[ValueObject<int>]
-public readonly partial record struct ByteHandle : IHandle<ByteHandle>
+public readonly record struct ByteHandle(int Value) : IHandle<ByteHandle>
 {
-    public static bool operator <(ByteHandle left, ByteHandle right)
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static ByteHandle From(int value)
     {
-        return left.CompareTo(right) < 0;
-    }
-
-    public static bool operator <=(ByteHandle left, ByteHandle right)
-    {
-        return left.CompareTo(right) <= 0;
-    }
-
-    public static bool operator >(ByteHandle left, ByteHandle right)
-    {
-        return left.CompareTo(right) > 0;
-    }
-
-    public static bool operator >=(ByteHandle left, ByteHandle right)
-    {
-        return left.CompareTo(right) >= 0;
-    }
-
-    private static int NormalizeInput(int input)
-    {
-        return input;
-    }
-
-    private static Validation Validate(int input)
-    {
-        return input >= 0 ? Validation.Ok : Validation.Invalid("Handle cannot reference negative element");
-    }
-
-    public static ByteHandle DangerouslyCreateHandleForPool(int value)
-    {
-        return From(value);
+        return new ByteHandle(value);
     }
 }
 
-[ValueObject<int>]
-public readonly partial record struct DebugFileHandle : IHandle<DebugFileHandle>
+public readonly record struct DebugFileHandle(int Value) : IHandle<DebugFileHandle>
 {
-    public static bool operator <(DebugFileHandle left, DebugFileHandle right)
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static DebugFileHandle From(int value)
     {
-        return left.CompareTo(right) < 0;
-    }
-
-    public static bool operator <=(DebugFileHandle left, DebugFileHandle right)
-    {
-        return left.CompareTo(right) <= 0;
-    }
-
-    public static bool operator >(DebugFileHandle left, DebugFileHandle right)
-    {
-        return left.CompareTo(right) > 0;
-    }
-
-    public static bool operator >=(DebugFileHandle left, DebugFileHandle right)
-    {
-        return left.CompareTo(right) >= 0;
-    }
-
-    private static int NormalizeInput(int input)
-    {
-        return input;
-    }
-
-    private static Validation Validate(int input)
-    {
-        return input >= 0 ? Validation.Ok : Validation.Invalid("Handle cannot reference negative element");
-    }
-
-    public static DebugFileHandle DangerouslyCreateHandleForPool(int value)
-    {
-        return From(value);
+        return new DebugFileHandle(value);
     }
 }
 
-[ValueObject<int>]
-public readonly partial record struct TypeHandle : IHandle<TypeHandle>
+public readonly record struct TypeHandle(int Value) : IHandle<TypeHandle>
 {
-    public static bool operator <(TypeHandle left, TypeHandle right)
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static TypeHandle From(int value)
     {
-        return left.CompareTo(right) < 0;
-    }
-
-    public static bool operator <=(TypeHandle left, TypeHandle right)
-    {
-        return left.CompareTo(right) <= 0;
-    }
-
-    public static bool operator >(TypeHandle left, TypeHandle right)
-    {
-        return left.CompareTo(right) > 0;
-    }
-
-    public static bool operator >=(TypeHandle left, TypeHandle right)
-    {
-        return left.CompareTo(right) >= 0;
-    }
-
-    private static int NormalizeInput(int input)
-    {
-        return input;
-    }
-
-    private static Validation Validate(int input)
-    {
-        return input >= 0 ? Validation.Ok : Validation.Invalid("Handle cannot reference negative element");
-    }
-
-    public static TypeHandle DangerouslyCreateHandleForPool(int value)
-    {
-        return From(value);
+        return new TypeHandle(value);
     }
 }
 
-[ValueObject<int>]
-public readonly partial record struct GlobalHandle : IHandle<GlobalHandle>
+public readonly record struct GlobalHandle(int Value) : IHandle<GlobalHandle>
 {
-    public static bool operator <(GlobalHandle left, GlobalHandle right)
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static GlobalHandle From(int value)
     {
-        return left.CompareTo(right) < 0;
-    }
-
-    public static bool operator <=(GlobalHandle left, GlobalHandle right)
-    {
-        return left.CompareTo(right) <= 0;
-    }
-
-    public static bool operator >(GlobalHandle left, GlobalHandle right)
-    {
-        return left.CompareTo(right) > 0;
-    }
-
-    public static bool operator >=(GlobalHandle left, GlobalHandle right)
-    {
-        return left.CompareTo(right) >= 0;
-    }
-
-    private static int NormalizeInput(int input)
-    {
-        return input;
-    }
-
-    private static Validation Validate(int input)
-    {
-        return input >= 0 ? Validation.Ok : Validation.Invalid("Handle cannot reference negative element");
-    }
-
-    public static GlobalHandle DangerouslyCreateHandleForPool(int value)
-    {
-        return From(value);
+        return new GlobalHandle(value);
     }
 }
 
-[ValueObject<int>]
-public readonly partial record struct NativeHandle : IHandle<NativeHandle>
+public readonly record struct NativeHandle(int Value) : IHandle<NativeHandle>
 {
-    public static bool operator <(NativeHandle left, NativeHandle right)
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static NativeHandle From(int value)
     {
-        return left.CompareTo(right) < 0;
-    }
-
-    public static bool operator <=(NativeHandle left, NativeHandle right)
-    {
-        return left.CompareTo(right) <= 0;
-    }
-
-    public static bool operator >(NativeHandle left, NativeHandle right)
-    {
-        return left.CompareTo(right) > 0;
-    }
-
-    public static bool operator >=(NativeHandle left, NativeHandle right)
-    {
-        return left.CompareTo(right) >= 0;
-    }
-
-    private static int NormalizeInput(int input)
-    {
-        return input;
-    }
-
-    private static Validation Validate(int input)
-    {
-        return input >= 0 ? Validation.Ok : Validation.Invalid("Handle cannot reference negative element");
-    }
-
-    public static NativeHandle DangerouslyCreateHandleForPool(int value)
-    {
-        return From(value);
+        return new NativeHandle(value);
     }
 }
 
-[ValueObject<int>]
-public readonly partial record struct FunctionHandle : IHandle<FunctionHandle>
+public readonly record struct FunctionHandle(int Value) : IHandle<FunctionHandle>
 {
-    public static bool operator <(FunctionHandle left, FunctionHandle right)
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static FunctionHandle From(int value)
     {
-        return left.CompareTo(right) < 0;
-    }
-
-    public static bool operator <=(FunctionHandle left, FunctionHandle right)
-    {
-        return left.CompareTo(right) <= 0;
-    }
-
-    public static bool operator >(FunctionHandle left, FunctionHandle right)
-    {
-        return left.CompareTo(right) > 0;
-    }
-
-    public static bool operator >=(FunctionHandle left, FunctionHandle right)
-    {
-        return left.CompareTo(right) >= 0;
-    }
-
-    private static int NormalizeInput(int input)
-    {
-        return input;
-    }
-
-    private static Validation Validate(int input)
-    {
-        return input >= 0 ? Validation.Ok : Validation.Invalid("Handle cannot reference negative element");
-    }
-
-    public static FunctionHandle DangerouslyCreateHandleForPool(int value)
-    {
-        return From(value);
+        return new FunctionHandle(value);
     }
 }
 
-[ValueObject<int>]
-public readonly partial record struct ConstantHandle : IHandle<ConstantHandle>
+public readonly record struct ConstantHandle(int Value) : IHandle<ConstantHandle>
 {
-    public static bool operator <(ConstantHandle left, ConstantHandle right)
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static ConstantHandle From(int value)
     {
-        return left.CompareTo(right) < 0;
-    }
-
-    public static bool operator <=(ConstantHandle left, ConstantHandle right)
-    {
-        return left.CompareTo(right) <= 0;
-    }
-
-    public static bool operator >(ConstantHandle left, ConstantHandle right)
-    {
-        return left.CompareTo(right) > 0;
-    }
-
-    public static bool operator >=(ConstantHandle left, ConstantHandle right)
-    {
-        return left.CompareTo(right) >= 0;
-    }
-
-    private static int NormalizeInput(int input)
-    {
-        return input;
-    }
-
-    private static Validation Validate(int input)
-    {
-        return input >= 0 ? Validation.Ok : Validation.Invalid("Handle cannot reference negative element");
-    }
-
-    public static ConstantHandle DangerouslyCreateHandleForPool(int value)
-    {
-        return From(value);
+        return new ConstantHandle(value);
     }
 }

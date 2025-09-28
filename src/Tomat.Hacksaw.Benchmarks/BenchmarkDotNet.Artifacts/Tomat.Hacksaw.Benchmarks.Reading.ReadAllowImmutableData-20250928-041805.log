@@ -1,0 +1,910 @@
+// Validating benchmarks:
+// ***** BenchmarkRunner: Start   *****
+// ***** Found 8 benchmark(s) in total *****
+// ***** Building 1 exe(s) in Parallel: Start   *****
+// start dotnet  restore /p:UseSharedCompilation=false /p:BuildInParallel=false /m:1 /p:Deterministic=true /p:Optimize=true /p:ArtifactsPath="C:\Users\sgt\cs\repos\gold-meridian\hacksaw\src\Tomat.Hacksaw.Benchmarks\bin\Release\net10.0\Tomat.Hacksaw.Benchmarks-1/" /p:OutDir="C:\Users\sgt\cs\repos\gold-meridian\hacksaw\src\Tomat.Hacksaw.Benchmarks\bin\Release\net10.0\Tomat.Hacksaw.Benchmarks-1\bin\Release\net10.0/" /p:OutputPath="C:\Users\sgt\cs\repos\gold-meridian\hacksaw\src\Tomat.Hacksaw.Benchmarks\bin\Release\net10.0\Tomat.Hacksaw.Benchmarks-1\bin\Release\net10.0/" /p:PublishDir="C:\Users\sgt\cs\repos\gold-meridian\hacksaw\src\Tomat.Hacksaw.Benchmarks\bin\Release\net10.0\Tomat.Hacksaw.Benchmarks-1\publish/" in C:\Users\sgt\cs\repos\gold-meridian\hacksaw\src\Tomat.Hacksaw.Benchmarks\bin\Release\net10.0\Tomat.Hacksaw.Benchmarks-1
+// command took 1.23 sec and exited with 0
+// start dotnet  build -c Release --no-restore /p:UseSharedCompilation=false /p:BuildInParallel=false /m:1 /p:Deterministic=true /p:Optimize=true /p:ArtifactsPath="C:\Users\sgt\cs\repos\gold-meridian\hacksaw\src\Tomat.Hacksaw.Benchmarks\bin\Release\net10.0\Tomat.Hacksaw.Benchmarks-1/" /p:OutDir="C:\Users\sgt\cs\repos\gold-meridian\hacksaw\src\Tomat.Hacksaw.Benchmarks\bin\Release\net10.0\Tomat.Hacksaw.Benchmarks-1\bin\Release\net10.0/" /p:OutputPath="C:\Users\sgt\cs\repos\gold-meridian\hacksaw\src\Tomat.Hacksaw.Benchmarks\bin\Release\net10.0\Tomat.Hacksaw.Benchmarks-1\bin\Release\net10.0/" /p:PublishDir="C:\Users\sgt\cs\repos\gold-meridian\hacksaw\src\Tomat.Hacksaw.Benchmarks\bin\Release\net10.0\Tomat.Hacksaw.Benchmarks-1\publish/" --output "C:\Users\sgt\cs\repos\gold-meridian\hacksaw\src\Tomat.Hacksaw.Benchmarks\bin\Release\net10.0\Tomat.Hacksaw.Benchmarks-1\bin\Release\net10.0/" in C:\Users\sgt\cs\repos\gold-meridian\hacksaw\src\Tomat.Hacksaw.Benchmarks\bin\Release\net10.0\Tomat.Hacksaw.Benchmarks-1
+// command took 14.07 sec and exited with 0
+// ***** Done, took 00:00:15 (15.36 sec)   *****
+// Found 8 benchmarks:
+//   ReadAllowImmutableData.HacksawRead: DefaultJob [ImagePath=binaries/hello.hl]
+//   ReadAllowImmutableData.HacksawReadSlim: DefaultJob [ImagePath=binaries/hello.hl]
+//   ReadAllowImmutableData.HaxelinkRead: DefaultJob [ImagePath=binaries/hello.hl]
+//   ReadAllowImmutableData.DccmHashlinkNetRead: DefaultJob [ImagePath=binaries/hello.hl]
+//   ReadAllowImmutableData.HacksawRead: DefaultJob [ImagePath=C:/Pr(...)T.DAT [67]]
+//   ReadAllowImmutableData.HacksawReadSlim: DefaultJob [ImagePath=C:/Pr(...)T.DAT [67]]
+//   ReadAllowImmutableData.HaxelinkRead: DefaultJob [ImagePath=C:/Pr(...)T.DAT [67]]
+//   ReadAllowImmutableData.DccmHashlinkNetRead: DefaultJob [ImagePath=C:/Pr(...)T.DAT [67]]
+
+Setup power plan (GUID: 8c5e7fda-e8bf-4a96-9a85-a6e23a8c635c FriendlyName: High performance)
+// **************************
+// Benchmark: ReadAllowImmutableData.HacksawRead: DefaultJob [ImagePath=binaries/hello.hl]
+// *** Execute ***
+// Launch: 1 / 1
+// Execute: dotnet Tomat.Hacksaw.Benchmarks-1.dll --anonymousPipes 1656 1644 --benchmarkName "Tomat.Hacksaw.Benchmarks.Reading.ReadAllowImmutableData.HacksawRead(ImagePath: \"binaries/hello.hl\")" --job Default --benchmarkId 0 in C:\Users\sgt\cs\repos\gold-meridian\hacksaw\src\Tomat.Hacksaw.Benchmarks\bin\Release\net10.0\Tomat.Hacksaw.Benchmarks-1\bin\Release\net10.0
+// BeforeAnythingElse
+
+// Benchmark Process Environment Information:
+// BenchmarkDotNet v0.15.2
+// Runtime=.NET 10.0.0 (10.0.25.45207), X64 RyuJIT AVX2
+// GC=Concurrent Workstation
+// HardwareIntrinsics=AVX2,AES,BMI1,BMI2,FMA,LZCNT,PCLMUL,POPCNT VectorSize=256
+// Job: DefaultJob
+
+OverheadJitting  1: 1 op, 123600.00 ns, 123.6000 us/op
+WorkloadJitting  1: 1 op, 144143600.00 ns, 144.1436 ms/op
+
+WorkloadPilot    1: 2 op, 2414800.00 ns, 1.2074 ms/op
+WorkloadPilot    2: 3 op, 3144800.00 ns, 1.0483 ms/op
+WorkloadPilot    3: 4 op, 6581100.00 ns, 1.6453 ms/op
+WorkloadPilot    4: 5 op, 5158000.00 ns, 1.0316 ms/op
+WorkloadPilot    5: 6 op, 6685900.00 ns, 1.1143 ms/op
+WorkloadPilot    6: 7 op, 7412200.00 ns, 1.0589 ms/op
+WorkloadPilot    7: 8 op, 7915300.00 ns, 989.4125 us/op
+WorkloadPilot    8: 9 op, 9212900.00 ns, 1.0237 ms/op
+WorkloadPilot    9: 10 op, 10929300.00 ns, 1.0929 ms/op
+WorkloadPilot   10: 11 op, 11240900.00 ns, 1.0219 ms/op
+WorkloadPilot   11: 12 op, 12275600.00 ns, 1.0230 ms/op
+WorkloadPilot   12: 13 op, 12488200.00 ns, 960.6308 us/op
+WorkloadPilot   13: 14 op, 13361400.00 ns, 954.3857 us/op
+WorkloadPilot   14: 15 op, 15437600.00 ns, 1.0292 ms/op
+WorkloadPilot   15: 16 op, 15595100.00 ns, 974.6938 us/op
+WorkloadPilot   16: 32 op, 32344800.00 ns, 1.0108 ms/op
+WorkloadPilot   17: 64 op, 64782700.00 ns, 1.0122 ms/op
+WorkloadPilot   18: 128 op, 131177800.00 ns, 1.0248 ms/op
+WorkloadPilot   19: 256 op, 271011900.00 ns, 1.0586 ms/op
+WorkloadPilot   20: 512 op, 174513000.00 ns, 340.8457 us/op
+WorkloadPilot   21: 1024 op, 206385000.00 ns, 201.5479 us/op
+WorkloadPilot   22: 2048 op, 433010800.00 ns, 211.4311 us/op
+WorkloadPilot   23: 4096 op, 851149900.00 ns, 207.8003 us/op
+
+OverheadWarmup   1: 4096 op, 9500.00 ns, 2.3193 ns/op
+OverheadWarmup   2: 4096 op, 8700.00 ns, 2.1240 ns/op
+OverheadWarmup   3: 4096 op, 6900.00 ns, 1.6846 ns/op
+OverheadWarmup   4: 4096 op, 6900.00 ns, 1.6846 ns/op
+OverheadWarmup   5: 4096 op, 10700.00 ns, 2.6123 ns/op
+OverheadWarmup   6: 4096 op, 8500.00 ns, 2.0752 ns/op
+OverheadWarmup   7: 4096 op, 8500.00 ns, 2.0752 ns/op
+
+// BeforeActualRun
+WorkloadActual   1: 4096 op, 824056200.00 ns, 201.1856 us/op
+WorkloadActual   2: 4096 op, 835961000.00 ns, 204.0920 us/op
+WorkloadActual   3: 4096 op, 849778200.00 ns, 207.4654 us/op
+WorkloadActual   4: 4096 op, 820344800.00 ns, 200.2795 us/op
+WorkloadActual   5: 4096 op, 840625900.00 ns, 205.2309 us/op
+WorkloadActual   6: 4096 op, 853464900.00 ns, 208.3655 us/op
+WorkloadActual   7: 4096 op, 820998200.00 ns, 200.4390 us/op
+WorkloadActual   8: 4096 op, 819469000.00 ns, 200.0657 us/op
+WorkloadActual   9: 4096 op, 820921600.00 ns, 200.4203 us/op
+WorkloadActual  10: 4096 op, 835726500.00 ns, 204.0348 us/op
+WorkloadActual  11: 4096 op, 819764100.00 ns, 200.1377 us/op
+WorkloadActual  12: 4096 op, 834851500.00 ns, 203.8212 us/op
+WorkloadActual  13: 4096 op, 820823300.00 ns, 200.3963 us/op
+WorkloadActual  14: 4096 op, 822881100.00 ns, 200.8987 us/op
+WorkloadActual  15: 4096 op, 820313300.00 ns, 200.2718 us/op
+
+// AfterActualRun
+WorkloadResult   1: 4096 op, 824056200.00 ns, 201.1856 us/op
+WorkloadResult   2: 4096 op, 835961000.00 ns, 204.0920 us/op
+WorkloadResult   3: 4096 op, 849778200.00 ns, 207.4654 us/op
+WorkloadResult   4: 4096 op, 820344800.00 ns, 200.2795 us/op
+WorkloadResult   5: 4096 op, 840625900.00 ns, 205.2309 us/op
+WorkloadResult   6: 4096 op, 853464900.00 ns, 208.3655 us/op
+WorkloadResult   7: 4096 op, 820998200.00 ns, 200.4390 us/op
+WorkloadResult   8: 4096 op, 819469000.00 ns, 200.0657 us/op
+WorkloadResult   9: 4096 op, 820921600.00 ns, 200.4203 us/op
+WorkloadResult  10: 4096 op, 835726500.00 ns, 204.0348 us/op
+WorkloadResult  11: 4096 op, 819764100.00 ns, 200.1377 us/op
+WorkloadResult  12: 4096 op, 834851500.00 ns, 203.8212 us/op
+WorkloadResult  13: 4096 op, 820823300.00 ns, 200.3963 us/op
+WorkloadResult  14: 4096 op, 822881100.00 ns, 200.8987 us/op
+WorkloadResult  15: 4096 op, 820313300.00 ns, 200.2718 us/op
+// GC:  1365 1365 1365 5564366768 4096
+// Threading:  0 0 4096
+
+// AfterAll
+// Benchmark Process 17516 has exited with code 0.
+
+Mean = 202.474 μs, StdErr = 0.730 μs (0.36%), N = 15, StdDev = 2.826 μs
+Min = 200.066 μs, Q1 = 200.338 μs, Median = 200.899 μs, Q3 = 204.063 μs, Max = 208.365 μs
+IQR = 3.726 μs, LowerFence = 194.750 μs, UpperFence = 209.652 μs
+ConfidenceInterval = [199.452 μs; 205.495 μs] (CI 99.9%), Margin = 3.022 μs (1.49% of Mean)
+Skewness = 0.83, Kurtosis = 2.17, MValue = 2
+
+// ** Remained 7 (87.5%) benchmark(s) to run. Estimated finish 2025-09-28 4:20 (0h 1m from now) **
+Setup power plan (GUID: 8c5e7fda-e8bf-4a96-9a85-a6e23a8c635c FriendlyName: High performance)
+// **************************
+// Benchmark: ReadAllowImmutableData.HacksawReadSlim: DefaultJob [ImagePath=binaries/hello.hl]
+// *** Execute ***
+// Launch: 1 / 1
+// Execute: dotnet Tomat.Hacksaw.Benchmarks-1.dll --anonymousPipes 1692 1604 --benchmarkName "Tomat.Hacksaw.Benchmarks.Reading.ReadAllowImmutableData.HacksawReadSlim(ImagePath: \"binaries/hello.hl\")" --job Default --benchmarkId 1 in C:\Users\sgt\cs\repos\gold-meridian\hacksaw\src\Tomat.Hacksaw.Benchmarks\bin\Release\net10.0\Tomat.Hacksaw.Benchmarks-1\bin\Release\net10.0
+// BeforeAnythingElse
+
+// Benchmark Process Environment Information:
+// BenchmarkDotNet v0.15.2
+// Runtime=.NET 10.0.0 (10.0.25.45207), X64 RyuJIT AVX2
+// GC=Concurrent Workstation
+// HardwareIntrinsics=AVX2,AES,BMI1,BMI2,FMA,LZCNT,PCLMUL,POPCNT VectorSize=256
+// Job: DefaultJob
+
+OverheadJitting  1: 1 op, 120900.00 ns, 120.9000 us/op
+WorkloadJitting  1: 1 op, 12410900.00 ns, 12.4109 ms/op
+
+OverheadJitting  2: 16 op, 207100.00 ns, 12.9438 us/op
+WorkloadJitting  2: 16 op, 18513900.00 ns, 1.1571 ms/op
+
+WorkloadPilot    1: 16 op, 14493900.00 ns, 905.8688 us/op
+WorkloadPilot    2: 32 op, 29217700.00 ns, 913.0531 us/op
+WorkloadPilot    3: 64 op, 53261900.00 ns, 832.2172 us/op
+WorkloadPilot    4: 128 op, 108629100.00 ns, 848.6648 us/op
+WorkloadPilot    5: 256 op, 211802000.00 ns, 827.3516 us/op
+WorkloadPilot    6: 512 op, 251209500.00 ns, 490.6436 us/op
+WorkloadPilot    7: 1024 op, 190557700.00 ns, 186.0915 us/op
+WorkloadPilot    8: 2048 op, 458855100.00 ns, 224.0503 us/op
+WorkloadPilot    9: 4096 op, 792005400.00 ns, 193.3607 us/op
+
+OverheadWarmup   1: 4096 op, 9600.00 ns, 2.3438 ns/op
+OverheadWarmup   2: 4096 op, 7100.00 ns, 1.7334 ns/op
+OverheadWarmup   3: 4096 op, 6900.00 ns, 1.6846 ns/op
+OverheadWarmup   4: 4096 op, 7000.00 ns, 1.7090 ns/op
+OverheadWarmup   5: 4096 op, 6900.00 ns, 1.6846 ns/op
+OverheadWarmup   6: 4096 op, 7000.00 ns, 1.7090 ns/op
+OverheadWarmup   7: 4096 op, 8600.00 ns, 2.0996 ns/op
+OverheadWarmup   8: 4096 op, 8400.00 ns, 2.0508 ns/op
+
+OverheadActual   1: 4096 op, 7100.00 ns, 1.7334 ns/op
+OverheadActual   2: 4096 op, 7000.00 ns, 1.7090 ns/op
+OverheadActual   3: 4096 op, 7100.00 ns, 1.7334 ns/op
+OverheadActual   4: 4096 op, 6900.00 ns, 1.6846 ns/op
+OverheadActual   5: 4096 op, 6600.00 ns, 1.6113 ns/op
+OverheadActual   6: 4096 op, 6800.00 ns, 1.6602 ns/op
+OverheadActual   7: 4096 op, 6800.00 ns, 1.6602 ns/op
+OverheadActual   8: 4096 op, 6700.00 ns, 1.6357 ns/op
+OverheadActual   9: 4096 op, 8700.00 ns, 2.1240 ns/op
+OverheadActual  10: 4096 op, 6800.00 ns, 1.6602 ns/op
+OverheadActual  11: 4096 op, 8600.00 ns, 2.0996 ns/op
+OverheadActual  12: 4096 op, 6900.00 ns, 1.6846 ns/op
+OverheadActual  13: 4096 op, 8500.00 ns, 2.0752 ns/op
+OverheadActual  14: 4096 op, 6900.00 ns, 1.6846 ns/op
+OverheadActual  15: 4096 op, 6600.00 ns, 1.6113 ns/op
+
+OverheadWarmup   1: 4096 op, 6900.00 ns, 1.6846 ns/op
+OverheadWarmup   2: 4096 op, 6800.00 ns, 1.6602 ns/op
+OverheadWarmup   3: 4096 op, 6700.00 ns, 1.6357 ns/op
+OverheadWarmup   4: 4096 op, 6700.00 ns, 1.6357 ns/op
+OverheadWarmup   5: 4096 op, 8700.00 ns, 2.1240 ns/op
+OverheadWarmup   6: 4096 op, 6800.00 ns, 1.6602 ns/op
+OverheadWarmup   7: 4096 op, 6700.00 ns, 1.6357 ns/op
+OverheadWarmup   8: 4096 op, 6800.00 ns, 1.6602 ns/op
+
+// BeforeActualRun
+WorkloadActual   1: 4096 op, 872071700.00 ns, 212.9081 us/op
+WorkloadActual   2: 4096 op, 828664600.00 ns, 202.3107 us/op
+WorkloadActual   3: 4096 op, 873174200.00 ns, 213.1773 us/op
+WorkloadActual   4: 4096 op, 859100400.00 ns, 209.7413 us/op
+WorkloadActual   5: 4096 op, 847233700.00 ns, 206.8442 us/op
+WorkloadActual   6: 4096 op, 831952400.00 ns, 203.1134 us/op
+WorkloadActual   7: 4096 op, 829791000.00 ns, 202.5857 us/op
+WorkloadActual   8: 4096 op, 837193100.00 ns, 204.3928 us/op
+WorkloadActual   9: 4096 op, 877606600.00 ns, 214.2594 us/op
+WorkloadActual  10: 4096 op, 857315100.00 ns, 209.3054 us/op
+WorkloadActual  11: 4096 op, 864018300.00 ns, 210.9420 us/op
+WorkloadActual  12: 4096 op, 838367100.00 ns, 204.6795 us/op
+WorkloadActual  13: 4096 op, 837339900.00 ns, 204.4287 us/op
+WorkloadActual  14: 4096 op, 837155900.00 ns, 204.3838 us/op
+WorkloadActual  15: 4096 op, 835904700.00 ns, 204.0783 us/op
+WorkloadActual  16: 4096 op, 837711700.00 ns, 204.5195 us/op
+WorkloadActual  17: 4096 op, 836936900.00 ns, 204.3303 us/op
+
+// AfterActualRun
+WorkloadResult   1: 4096 op, 872064800.00 ns, 212.9064 us/op
+WorkloadResult   2: 4096 op, 828657700.00 ns, 202.3090 us/op
+WorkloadResult   3: 4096 op, 873167300.00 ns, 213.1756 us/op
+WorkloadResult   4: 4096 op, 859093500.00 ns, 209.7396 us/op
+WorkloadResult   5: 4096 op, 847226800.00 ns, 206.8425 us/op
+WorkloadResult   6: 4096 op, 831945500.00 ns, 203.1117 us/op
+WorkloadResult   7: 4096 op, 829784100.00 ns, 202.5840 us/op
+WorkloadResult   8: 4096 op, 837186200.00 ns, 204.3912 us/op
+WorkloadResult   9: 4096 op, 877599700.00 ns, 214.2577 us/op
+WorkloadResult  10: 4096 op, 857308200.00 ns, 209.3038 us/op
+WorkloadResult  11: 4096 op, 864011400.00 ns, 210.9403 us/op
+WorkloadResult  12: 4096 op, 838360200.00 ns, 204.6778 us/op
+WorkloadResult  13: 4096 op, 837333000.00 ns, 204.4270 us/op
+WorkloadResult  14: 4096 op, 837149000.00 ns, 204.3821 us/op
+WorkloadResult  15: 4096 op, 835897800.00 ns, 204.0766 us/op
+WorkloadResult  16: 4096 op, 837704800.00 ns, 204.5178 us/op
+WorkloadResult  17: 4096 op, 836930000.00 ns, 204.3286 us/op
+// GC:  1365 1365 1365 5172363152 4096
+// Threading:  0 0 4096
+
+// AfterAll
+// Benchmark Process 7708 has exited with code 0.
+
+Mean = 206.822 μs, StdErr = 0.973 μs (0.47%), N = 17, StdDev = 4.013 μs
+Min = 202.309 μs, Q1 = 204.329 μs, Median = 204.518 μs, Q3 = 209.740 μs, Max = 214.258 μs
+IQR = 5.411 μs, LowerFence = 196.212 μs, UpperFence = 217.856 μs
+ConfidenceInterval = [202.914 μs; 210.730 μs] (CI 99.9%), Margin = 3.908 μs (1.89% of Mean)
+Skewness = 0.62, Kurtosis = 1.73, MValue = 2
+
+// ** Remained 6 (75.0%) benchmark(s) to run. Estimated finish 2025-09-28 4:20 (0h 1m from now) **
+Setup power plan (GUID: 8c5e7fda-e8bf-4a96-9a85-a6e23a8c635c FriendlyName: High performance)
+// **************************
+// Benchmark: ReadAllowImmutableData.HaxelinkRead: DefaultJob [ImagePath=binaries/hello.hl]
+// *** Execute ***
+// Launch: 1 / 1
+// Execute: dotnet Tomat.Hacksaw.Benchmarks-1.dll --anonymousPipes 1604 1608 --benchmarkName "Tomat.Hacksaw.Benchmarks.Reading.ReadAllowImmutableData.HaxelinkRead(ImagePath: \"binaries/hello.hl\")" --job Default --benchmarkId 2 in C:\Users\sgt\cs\repos\gold-meridian\hacksaw\src\Tomat.Hacksaw.Benchmarks\bin\Release\net10.0\Tomat.Hacksaw.Benchmarks-1\bin\Release\net10.0
+// BeforeAnythingElse
+
+// Benchmark Process Environment Information:
+// BenchmarkDotNet v0.15.2
+// Runtime=.NET 10.0.0 (10.0.25.45207), X64 RyuJIT AVX2
+// GC=Concurrent Workstation
+// HardwareIntrinsics=AVX2,AES,BMI1,BMI2,FMA,LZCNT,PCLMUL,POPCNT VectorSize=256
+// Job: DefaultJob
+
+OverheadJitting  1: 1 op, 120800.00 ns, 120.8000 us/op
+WorkloadJitting  1: 1 op, 100734500.00 ns, 100.7345 ms/op
+
+WorkloadPilot    1: 2 op, 2300000.00 ns, 1.1500 ms/op
+WorkloadPilot    2: 3 op, 2941900.00 ns, 980.6333 us/op
+WorkloadPilot    3: 4 op, 33510900.00 ns, 8.3777 ms/op
+WorkloadPilot    4: 5 op, 4495600.00 ns, 899.1200 us/op
+WorkloadPilot    5: 6 op, 5471400.00 ns, 911.9000 us/op
+WorkloadPilot    6: 7 op, 6526800.00 ns, 932.4000 us/op
+WorkloadPilot    7: 8 op, 6913200.00 ns, 864.1500 us/op
+WorkloadPilot    8: 9 op, 8374800.00 ns, 930.5333 us/op
+WorkloadPilot    9: 10 op, 9190900.00 ns, 919.0900 us/op
+WorkloadPilot   10: 11 op, 9608300.00 ns, 873.4818 us/op
+WorkloadPilot   11: 12 op, 9753000.00 ns, 812.7500 us/op
+WorkloadPilot   12: 13 op, 10586100.00 ns, 814.3154 us/op
+WorkloadPilot   13: 14 op, 16379100.00 ns, 1.1699 ms/op
+WorkloadPilot   14: 15 op, 15416400.00 ns, 1.0278 ms/op
+WorkloadPilot   15: 16 op, 16159400.00 ns, 1.0100 ms/op
+WorkloadPilot   16: 32 op, 33186300.00 ns, 1.0371 ms/op
+WorkloadPilot   17: 64 op, 64451400.00 ns, 1.0071 ms/op
+WorkloadPilot   18: 128 op, 45543000.00 ns, 355.8047 us/op
+WorkloadPilot   19: 256 op, 87421000.00 ns, 341.4883 us/op
+WorkloadPilot   20: 512 op, 198042000.00 ns, 386.8008 us/op
+WorkloadPilot   21: 1024 op, 301897100.00 ns, 294.8214 us/op
+WorkloadPilot   22: 2048 op, 617972100.00 ns, 301.7442 us/op
+
+OverheadWarmup   1: 2048 op, 6000.00 ns, 2.9297 ns/op
+OverheadWarmup   2: 2048 op, 8300.00 ns, 4.0527 ns/op
+OverheadWarmup   3: 2048 op, 4400.00 ns, 2.1484 ns/op
+OverheadWarmup   4: 2048 op, 4200.00 ns, 2.0508 ns/op
+OverheadWarmup   5: 2048 op, 4200.00 ns, 2.0508 ns/op
+OverheadWarmup   6: 2048 op, 3900.00 ns, 1.9043 ns/op
+
+// BeforeActualRun
+WorkloadActual   1: 2048 op, 603762700.00 ns, 294.8060 us/op
+WorkloadActual   2: 2048 op, 641847900.00 ns, 313.4023 us/op
+WorkloadActual   3: 2048 op, 613112100.00 ns, 299.3711 us/op
+WorkloadActual   4: 2048 op, 612186400.00 ns, 298.9191 us/op
+WorkloadActual   5: 2048 op, 647982000.00 ns, 316.3975 us/op
+WorkloadActual   6: 2048 op, 630237200.00 ns, 307.7330 us/op
+WorkloadActual   7: 2048 op, 615877000.00 ns, 300.7212 us/op
+WorkloadActual   8: 2048 op, 613847800.00 ns, 299.7304 us/op
+WorkloadActual   9: 2048 op, 613431700.00 ns, 299.5272 us/op
+WorkloadActual  10: 2048 op, 614199400.00 ns, 299.9021 us/op
+WorkloadActual  11: 2048 op, 611794200.00 ns, 298.7276 us/op
+WorkloadActual  12: 2048 op, 622129700.00 ns, 303.7743 us/op
+WorkloadActual  13: 2048 op, 623643900.00 ns, 304.5136 us/op
+WorkloadActual  14: 2048 op, 621577000.00 ns, 303.5044 us/op
+WorkloadActual  15: 2048 op, 623531400.00 ns, 304.4587 us/op
+
+// AfterActualRun
+WorkloadResult   1: 2048 op, 603762700.00 ns, 294.8060 us/op
+WorkloadResult   2: 2048 op, 613112100.00 ns, 299.3711 us/op
+WorkloadResult   3: 2048 op, 612186400.00 ns, 298.9191 us/op
+WorkloadResult   4: 2048 op, 630237200.00 ns, 307.7330 us/op
+WorkloadResult   5: 2048 op, 615877000.00 ns, 300.7212 us/op
+WorkloadResult   6: 2048 op, 613847800.00 ns, 299.7304 us/op
+WorkloadResult   7: 2048 op, 613431700.00 ns, 299.5272 us/op
+WorkloadResult   8: 2048 op, 614199400.00 ns, 299.9021 us/op
+WorkloadResult   9: 2048 op, 611794200.00 ns, 298.7276 us/op
+WorkloadResult  10: 2048 op, 622129700.00 ns, 303.7743 us/op
+WorkloadResult  11: 2048 op, 623643900.00 ns, 304.5136 us/op
+WorkloadResult  12: 2048 op, 621577000.00 ns, 303.5044 us/op
+WorkloadResult  13: 2048 op, 623531400.00 ns, 304.4587 us/op
+// GC:  206 154 0 1728460064 2048
+// Threading:  0 0 2048
+
+// AfterAll
+// Benchmark Process 20616 has exited with code 0.
+
+Mean = 301.207 μs, StdErr = 0.943 μs (0.31%), N = 13, StdDev = 3.399 μs
+Min = 294.806 μs, Q1 = 299.371 μs, Median = 299.902 μs, Q3 = 303.774 μs, Max = 307.733 μs
+IQR = 4.403 μs, LowerFence = 292.766 μs, UpperFence = 310.379 μs
+ConfidenceInterval = [297.137 μs; 305.277 μs] (CI 99.9%), Margin = 4.070 μs (1.35% of Mean)
+Skewness = 0.14, Kurtosis = 2.24, MValue = 2
+
+// ** Remained 5 (62.5%) benchmark(s) to run. Estimated finish 2025-09-28 4:20 (0h 1m from now) **
+Setup power plan (GUID: 8c5e7fda-e8bf-4a96-9a85-a6e23a8c635c FriendlyName: High performance)
+// **************************
+// Benchmark: ReadAllowImmutableData.DccmHashlinkNetRead: DefaultJob [ImagePath=binaries/hello.hl]
+// *** Execute ***
+// Launch: 1 / 1
+// Execute: dotnet Tomat.Hacksaw.Benchmarks-1.dll --anonymousPipes 1540 1660 --benchmarkName "Tomat.Hacksaw.Benchmarks.Reading.ReadAllowImmutableData.DccmHashlinkNetRead(ImagePath: \"binaries/hello.hl\")" --job Default --benchmarkId 3 in C:\Users\sgt\cs\repos\gold-meridian\hacksaw\src\Tomat.Hacksaw.Benchmarks\bin\Release\net10.0\Tomat.Hacksaw.Benchmarks-1\bin\Release\net10.0
+// BeforeAnythingElse
+
+// Benchmark Process Environment Information:
+// BenchmarkDotNet v0.15.2
+// Runtime=.NET 10.0.0 (10.0.25.45207), X64 RyuJIT AVX2
+// GC=Concurrent Workstation
+// HardwareIntrinsics=AVX2,AES,BMI1,BMI2,FMA,LZCNT,PCLMUL,POPCNT VectorSize=256
+// Job: DefaultJob
+
+OverheadJitting  1: 1 op, 118500.00 ns, 118.5000 us/op
+WorkloadJitting  1: 1 op, 97833800.00 ns, 97.8338 ms/op
+
+WorkloadPilot    1: 2 op, 3196100.00 ns, 1.5981 ms/op
+WorkloadPilot    2: 3 op, 4594500.00 ns, 1.5315 ms/op
+WorkloadPilot    3: 4 op, 11920000.00 ns, 2.9800 ms/op
+WorkloadPilot    4: 5 op, 7212800.00 ns, 1.4426 ms/op
+WorkloadPilot    5: 6 op, 8447600.00 ns, 1.4079 ms/op
+WorkloadPilot    6: 7 op, 10187500.00 ns, 1.4554 ms/op
+WorkloadPilot    7: 8 op, 11491400.00 ns, 1.4364 ms/op
+WorkloadPilot    8: 9 op, 12184900.00 ns, 1.3539 ms/op
+WorkloadPilot    9: 10 op, 13774400.00 ns, 1.3774 ms/op
+WorkloadPilot   10: 11 op, 15656900.00 ns, 1.4234 ms/op
+WorkloadPilot   11: 12 op, 17802100.00 ns, 1.4835 ms/op
+WorkloadPilot   12: 13 op, 20731200.00 ns, 1.5947 ms/op
+WorkloadPilot   13: 14 op, 19527400.00 ns, 1.3948 ms/op
+WorkloadPilot   14: 15 op, 20787100.00 ns, 1.3858 ms/op
+WorkloadPilot   15: 16 op, 20762800.00 ns, 1.2977 ms/op
+WorkloadPilot   16: 32 op, 43923800.00 ns, 1.3726 ms/op
+WorkloadPilot   17: 64 op, 45888000.00 ns, 717.0000 us/op
+WorkloadPilot   18: 128 op, 61105700.00 ns, 477.3883 us/op
+WorkloadPilot   19: 256 op, 114590800.00 ns, 447.6203 us/op
+WorkloadPilot   20: 512 op, 172868900.00 ns, 337.6346 us/op
+WorkloadPilot   21: 1024 op, 351326900.00 ns, 343.0927 us/op
+WorkloadPilot   22: 2048 op, 673439700.00 ns, 328.8280 us/op
+
+OverheadWarmup   1: 2048 op, 6100.00 ns, 2.9785 ns/op
+OverheadWarmup   2: 2048 op, 4000.00 ns, 1.9531 ns/op
+OverheadWarmup   3: 2048 op, 4400.00 ns, 2.1484 ns/op
+OverheadWarmup   4: 2048 op, 5000.00 ns, 2.4414 ns/op
+OverheadWarmup   5: 2048 op, 4000.00 ns, 1.9531 ns/op
+OverheadWarmup   6: 2048 op, 5000.00 ns, 2.4414 ns/op
+OverheadWarmup   7: 2048 op, 4000.00 ns, 1.9531 ns/op
+
+// BeforeActualRun
+WorkloadActual   1: 2048 op, 673319000.00 ns, 328.7690 us/op
+WorkloadActual   2: 2048 op, 670174100.00 ns, 327.2334 us/op
+WorkloadActual   3: 2048 op, 705415700.00 ns, 344.4413 us/op
+WorkloadActual   4: 2048 op, 702877300.00 ns, 343.2018 us/op
+WorkloadActual   5: 2048 op, 704486300.00 ns, 343.9875 us/op
+WorkloadActual   6: 2048 op, 709196000.00 ns, 346.2871 us/op
+WorkloadActual   7: 2048 op, 714195400.00 ns, 348.7282 us/op
+WorkloadActual   8: 2048 op, 717579700.00 ns, 350.3807 us/op
+WorkloadActual   9: 2048 op, 713089700.00 ns, 348.1883 us/op
+WorkloadActual  10: 2048 op, 711714400.00 ns, 347.5168 us/op
+WorkloadActual  11: 2048 op, 711941700.00 ns, 347.6278 us/op
+WorkloadActual  12: 2048 op, 735612600.00 ns, 359.1858 us/op
+WorkloadActual  13: 2048 op, 773086100.00 ns, 377.4834 us/op
+WorkloadActual  14: 2048 op, 729124200.00 ns, 356.0177 us/op
+WorkloadActual  15: 2048 op, 734503700.00 ns, 358.6444 us/op
+WorkloadActual  16: 2048 op, 733169700.00 ns, 357.9930 us/op
+WorkloadActual  17: 2048 op, 709421500.00 ns, 346.3972 us/op
+WorkloadActual  18: 2048 op, 708499700.00 ns, 345.9471 us/op
+WorkloadActual  19: 2048 op, 725346000.00 ns, 354.1729 us/op
+WorkloadActual  20: 2048 op, 712341800.00 ns, 347.8231 us/op
+WorkloadActual  21: 2048 op, 713709400.00 ns, 348.4909 us/op
+WorkloadActual  22: 2048 op, 709551900.00 ns, 346.4609 us/op
+
+// AfterActualRun
+WorkloadResult   1: 2048 op, 673319000.00 ns, 328.7690 us/op
+WorkloadResult   2: 2048 op, 670174100.00 ns, 327.2334 us/op
+WorkloadResult   3: 2048 op, 705415700.00 ns, 344.4413 us/op
+WorkloadResult   4: 2048 op, 702877300.00 ns, 343.2018 us/op
+WorkloadResult   5: 2048 op, 704486300.00 ns, 343.9875 us/op
+WorkloadResult   6: 2048 op, 709196000.00 ns, 346.2871 us/op
+WorkloadResult   7: 2048 op, 714195400.00 ns, 348.7282 us/op
+WorkloadResult   8: 2048 op, 717579700.00 ns, 350.3807 us/op
+WorkloadResult   9: 2048 op, 713089700.00 ns, 348.1883 us/op
+WorkloadResult  10: 2048 op, 711714400.00 ns, 347.5168 us/op
+WorkloadResult  11: 2048 op, 711941700.00 ns, 347.6278 us/op
+WorkloadResult  12: 2048 op, 735612600.00 ns, 359.1858 us/op
+WorkloadResult  13: 2048 op, 729124200.00 ns, 356.0177 us/op
+WorkloadResult  14: 2048 op, 734503700.00 ns, 358.6444 us/op
+WorkloadResult  15: 2048 op, 733169700.00 ns, 357.9930 us/op
+WorkloadResult  16: 2048 op, 709421500.00 ns, 346.3972 us/op
+WorkloadResult  17: 2048 op, 708499700.00 ns, 345.9471 us/op
+WorkloadResult  18: 2048 op, 725346000.00 ns, 354.1729 us/op
+WorkloadResult  19: 2048 op, 712341800.00 ns, 347.8231 us/op
+WorkloadResult  20: 2048 op, 713709400.00 ns, 348.4909 us/op
+WorkloadResult  21: 2048 op, 709551900.00 ns, 346.4609 us/op
+// GC:  221 161 0 1848918016 2048
+// Threading:  0 0 2048
+
+// AfterAll
+// Benchmark Process 19656 has exited with code 0.
+
+Mean = 347.500 μs, StdErr = 1.764 μs (0.51%), N = 21, StdDev = 8.085 μs
+Min = 327.233 μs, Q1 = 345.947 μs, Median = 347.628 μs, Q3 = 350.381 μs, Max = 359.186 μs
+IQR = 4.434 μs, LowerFence = 339.297 μs, UpperFence = 357.031 μs
+ConfidenceInterval = [340.708 μs; 354.291 μs] (CI 99.9%), Margin = 6.791 μs (1.95% of Mean)
+Skewness = -0.9, Kurtosis = 3.86, MValue = 2
+
+// ** Remained 4 (50.0%) benchmark(s) to run. Estimated finish 2025-09-28 4:20 (0h 1m from now) **
+Setup power plan (GUID: 8c5e7fda-e8bf-4a96-9a85-a6e23a8c635c FriendlyName: High performance)
+// **************************
+// Benchmark: ReadAllowImmutableData.HacksawRead: DefaultJob [ImagePath=C:/Pr(...)T.DAT [67]]
+// *** Execute ***
+// Launch: 1 / 1
+// Execute: dotnet Tomat.Hacksaw.Benchmarks-1.dll --anonymousPipes 1632 1680 --benchmarkName "Tomat.Hacksaw.Benchmarks.Reading.ReadAllowImmutableData.HacksawRead(ImagePath: \"C:/Program Files (x86)/Steam/steamapps/common/Dead Cells/HLBOOT.DAT\")" --job Default --benchmarkId 4 in C:\Users\sgt\cs\repos\gold-meridian\hacksaw\src\Tomat.Hacksaw.Benchmarks\bin\Release\net10.0\Tomat.Hacksaw.Benchmarks-1\bin\Release\net10.0
+// BeforeAnythingElse
+
+// Benchmark Process Environment Information:
+// BenchmarkDotNet v0.15.2
+// Runtime=.NET 10.0.0 (10.0.25.45207), X64 RyuJIT AVX2
+// GC=Concurrent Workstation
+// HardwareIntrinsics=AVX2,AES,BMI1,BMI2,FMA,LZCNT,PCLMUL,POPCNT VectorSize=256
+// Job: DefaultJob
+
+OverheadJitting  1: 1 op, 122400.00 ns, 122.4000 us/op
+WorkloadJitting  1: 1 op, 354546900.00 ns, 354.5469 ms/op
+
+OverheadJitting  2: 1 op, 600.00 ns, 600.0000 ns/op
+WorkloadJitting  2: 1 op, 204638600.00 ns, 204.6386 ms/op
+
+WorkloadPilot    1: 2 op, 448714200.00 ns, 224.3571 ms/op
+WorkloadPilot    2: 3 op, 624563400.00 ns, 208.1878 ms/op
+
+OverheadWarmup   1: 3 op, 1500.00 ns, 500.0000 ns/op
+OverheadWarmup   2: 3 op, 500.00 ns, 166.6667 ns/op
+OverheadWarmup   3: 3 op, 300.00 ns, 100.0000 ns/op
+OverheadWarmup   4: 3 op, 200.00 ns, 66.6667 ns/op
+OverheadWarmup   5: 3 op, 200.00 ns, 66.6667 ns/op
+OverheadWarmup   6: 3 op, 2200.00 ns, 733.3333 ns/op
+OverheadWarmup   7: 3 op, 200.00 ns, 66.6667 ns/op
+OverheadWarmup   8: 3 op, 200.00 ns, 66.6667 ns/op
+
+// BeforeActualRun
+WorkloadActual   1: 3 op, 660069900.00 ns, 220.0233 ms/op
+WorkloadActual   2: 3 op, 593604300.00 ns, 197.8681 ms/op
+WorkloadActual   3: 3 op, 608906200.00 ns, 202.9687 ms/op
+WorkloadActual   4: 3 op, 594545600.00 ns, 198.1819 ms/op
+WorkloadActual   5: 3 op, 603656100.00 ns, 201.2187 ms/op
+WorkloadActual   6: 3 op, 592422500.00 ns, 197.4742 ms/op
+WorkloadActual   7: 3 op, 612470700.00 ns, 204.1569 ms/op
+WorkloadActual   8: 3 op, 582718100.00 ns, 194.2394 ms/op
+WorkloadActual   9: 3 op, 598511700.00 ns, 199.5039 ms/op
+WorkloadActual  10: 3 op, 586555800.00 ns, 195.5186 ms/op
+WorkloadActual  11: 3 op, 585017800.00 ns, 195.0059 ms/op
+WorkloadActual  12: 3 op, 586483700.00 ns, 195.4946 ms/op
+WorkloadActual  13: 3 op, 593985900.00 ns, 197.9953 ms/op
+WorkloadActual  14: 3 op, 588821100.00 ns, 196.2737 ms/op
+WorkloadActual  15: 3 op, 582927800.00 ns, 194.3093 ms/op
+
+// AfterActualRun
+WorkloadResult   1: 3 op, 593604300.00 ns, 197.8681 ms/op
+WorkloadResult   2: 3 op, 608906200.00 ns, 202.9687 ms/op
+WorkloadResult   3: 3 op, 594545600.00 ns, 198.1819 ms/op
+WorkloadResult   4: 3 op, 603656100.00 ns, 201.2187 ms/op
+WorkloadResult   5: 3 op, 592422500.00 ns, 197.4742 ms/op
+WorkloadResult   6: 3 op, 612470700.00 ns, 204.1569 ms/op
+WorkloadResult   7: 3 op, 582718100.00 ns, 194.2394 ms/op
+WorkloadResult   8: 3 op, 598511700.00 ns, 199.5039 ms/op
+WorkloadResult   9: 3 op, 586555800.00 ns, 195.5186 ms/op
+WorkloadResult  10: 3 op, 585017800.00 ns, 195.0059 ms/op
+WorkloadResult  11: 3 op, 586483700.00 ns, 195.4946 ms/op
+WorkloadResult  12: 3 op, 593985900.00 ns, 197.9953 ms/op
+WorkloadResult  13: 3 op, 588821100.00 ns, 196.2737 ms/op
+WorkloadResult  14: 3 op, 582927800.00 ns, 194.3093 ms/op
+// GC:  46 45 6 510619760 3
+// Threading:  0 0 3
+
+// AfterAll
+// Benchmark Process 1948 has exited with code 0.
+
+Mean = 197.872 ms, StdErr = 0.837 ms (0.42%), N = 14, StdDev = 3.131 ms
+Min = 194.239 ms, Q1 = 195.501 ms, Median = 197.671 ms, Q3 = 199.173 ms, Max = 204.157 ms
+IQR = 3.673 ms, LowerFence = 189.991 ms, UpperFence = 204.683 ms
+ConfidenceInterval = [194.340 ms; 201.404 ms] (CI 99.9%), Margin = 3.532 ms (1.79% of Mean)
+Skewness = 0.64, Kurtosis = 2.11, MValue = 2
+
+// ** Remained 3 (37.5%) benchmark(s) to run. Estimated finish 2025-09-28 4:20 (0h 0m from now) **
+Setup power plan (GUID: 8c5e7fda-e8bf-4a96-9a85-a6e23a8c635c FriendlyName: High performance)
+// **************************
+// Benchmark: ReadAllowImmutableData.HacksawReadSlim: DefaultJob [ImagePath=C:/Pr(...)T.DAT [67]]
+// *** Execute ***
+// Launch: 1 / 1
+// Execute: dotnet Tomat.Hacksaw.Benchmarks-1.dll --anonymousPipes 1540 1400 --benchmarkName "Tomat.Hacksaw.Benchmarks.Reading.ReadAllowImmutableData.HacksawReadSlim(ImagePath: \"C:/Program Files (x86)/Steam/steamapps/common/Dead Cells/HLBOOT.DAT\")" --job Default --benchmarkId 5 in C:\Users\sgt\cs\repos\gold-meridian\hacksaw\src\Tomat.Hacksaw.Benchmarks\bin\Release\net10.0\Tomat.Hacksaw.Benchmarks-1\bin\Release\net10.0
+// BeforeAnythingElse
+
+// Benchmark Process Environment Information:
+// BenchmarkDotNet v0.15.2
+// Runtime=.NET 10.0.0 (10.0.25.45207), X64 RyuJIT AVX2
+// GC=Concurrent Workstation
+// HardwareIntrinsics=AVX2,AES,BMI1,BMI2,FMA,LZCNT,PCLMUL,POPCNT VectorSize=256
+// Job: DefaultJob
+
+OverheadJitting  1: 1 op, 115900.00 ns, 115.9000 us/op
+WorkloadJitting  1: 1 op, 305915000.00 ns, 305.9150 ms/op
+
+WorkloadPilot    1: 2 op, 321066700.00 ns, 160.5334 ms/op
+WorkloadPilot    2: 3 op, 505669200.00 ns, 168.5564 ms/op
+
+OverheadWarmup   1: 3 op, 600.00 ns, 200.0000 ns/op
+OverheadWarmup   2: 3 op, 200.00 ns, 66.6667 ns/op
+OverheadWarmup   3: 3 op, 200.00 ns, 66.6667 ns/op
+OverheadWarmup   4: 3 op, 100.00 ns, 33.3333 ns/op
+OverheadWarmup   5: 3 op, 200.00 ns, 66.6667 ns/op
+OverheadWarmup   6: 3 op, 200.00 ns, 66.6667 ns/op
+
+// BeforeActualRun
+WorkloadActual   1: 3 op, 482289200.00 ns, 160.7631 ms/op
+WorkloadActual   2: 3 op, 440031400.00 ns, 146.6771 ms/op
+WorkloadActual   3: 3 op, 453059900.00 ns, 151.0200 ms/op
+WorkloadActual   4: 3 op, 443696200.00 ns, 147.8987 ms/op
+WorkloadActual   5: 3 op, 450469500.00 ns, 150.1565 ms/op
+WorkloadActual   6: 3 op, 454354500.00 ns, 151.4515 ms/op
+WorkloadActual   7: 3 op, 448794000.00 ns, 149.5980 ms/op
+WorkloadActual   8: 3 op, 446018900.00 ns, 148.6730 ms/op
+WorkloadActual   9: 3 op, 466320400.00 ns, 155.4401 ms/op
+WorkloadActual  10: 3 op, 459739400.00 ns, 153.2465 ms/op
+WorkloadActual  11: 3 op, 451748500.00 ns, 150.5828 ms/op
+WorkloadActual  12: 3 op, 447045300.00 ns, 149.0151 ms/op
+WorkloadActual  13: 3 op, 447540300.00 ns, 149.1801 ms/op
+WorkloadActual  14: 3 op, 449477500.00 ns, 149.8258 ms/op
+WorkloadActual  15: 3 op, 450555600.00 ns, 150.1852 ms/op
+
+// AfterActualRun
+WorkloadResult   1: 3 op, 440031400.00 ns, 146.6771 ms/op
+WorkloadResult   2: 3 op, 453059900.00 ns, 151.0200 ms/op
+WorkloadResult   3: 3 op, 443696200.00 ns, 147.8987 ms/op
+WorkloadResult   4: 3 op, 450469500.00 ns, 150.1565 ms/op
+WorkloadResult   5: 3 op, 454354500.00 ns, 151.4515 ms/op
+WorkloadResult   6: 3 op, 448794000.00 ns, 149.5980 ms/op
+WorkloadResult   7: 3 op, 446018900.00 ns, 148.6730 ms/op
+WorkloadResult   8: 3 op, 459739400.00 ns, 153.2465 ms/op
+WorkloadResult   9: 3 op, 451748500.00 ns, 150.5828 ms/op
+WorkloadResult  10: 3 op, 447045300.00 ns, 149.0151 ms/op
+WorkloadResult  11: 3 op, 447540300.00 ns, 149.1801 ms/op
+WorkloadResult  12: 3 op, 449477500.00 ns, 149.8258 ms/op
+WorkloadResult  13: 3 op, 450555600.00 ns, 150.1852 ms/op
+// GC:  29 28 6 369118912 3
+// Threading:  0 0 3
+
+// AfterAll
+// Benchmark Process 24104 has exited with code 0.
+
+Mean = 149.808 ms, StdErr = 0.458 ms (0.31%), N = 13, StdDev = 1.650 ms
+Min = 146.677 ms, Q1 = 149.015 ms, Median = 149.826 ms, Q3 = 150.583 ms, Max = 153.246 ms
+IQR = 1.568 ms, LowerFence = 146.663 ms, UpperFence = 152.934 ms
+ConfidenceInterval = [147.833 ms; 151.784 ms] (CI 99.9%), Margin = 1.976 ms (1.32% of Mean)
+Skewness = 0.13, Kurtosis = 2.71, MValue = 2
+
+// ** Remained 2 (25.0%) benchmark(s) to run. Estimated finish 2025-09-28 4:20 (0h 0m from now) **
+Setup power plan (GUID: 8c5e7fda-e8bf-4a96-9a85-a6e23a8c635c FriendlyName: High performance)
+// **************************
+// Benchmark: ReadAllowImmutableData.HaxelinkRead: DefaultJob [ImagePath=C:/Pr(...)T.DAT [67]]
+// *** Execute ***
+// Launch: 1 / 1
+// Execute: dotnet Tomat.Hacksaw.Benchmarks-1.dll --anonymousPipes 1752 1748 --benchmarkName "Tomat.Hacksaw.Benchmarks.Reading.ReadAllowImmutableData.HaxelinkRead(ImagePath: \"C:/Program Files (x86)/Steam/steamapps/common/Dead Cells/HLBOOT.DAT\")" --job Default --benchmarkId 6 in C:\Users\sgt\cs\repos\gold-meridian\hacksaw\src\Tomat.Hacksaw.Benchmarks\bin\Release\net10.0\Tomat.Hacksaw.Benchmarks-1\bin\Release\net10.0
+// BeforeAnythingElse
+
+// Benchmark Process Environment Information:
+// BenchmarkDotNet v0.15.2
+// Runtime=.NET 10.0.0 (10.0.25.45207), X64 RyuJIT AVX2
+// GC=Concurrent Workstation
+// HardwareIntrinsics=AVX2,AES,BMI1,BMI2,FMA,LZCNT,PCLMUL,POPCNT VectorSize=256
+// Job: DefaultJob
+
+OverheadJitting  1: 1 op, 124800.00 ns, 124.8000 us/op
+WorkloadJitting  1: 1 op, 769108200.00 ns, 769.1082 ms/op
+
+OverheadJitting  2: 1 op, 500.00 ns, 500.0000 ns/op
+WorkloadJitting  2: 1 op, 683457700.00 ns, 683.4577 ms/op
+
+OverheadWarmup   1: 1 op, 1000.00 ns, 1.0000 us/op
+OverheadWarmup   2: 1 op, 200.00 ns, 200.0000 ns/op
+OverheadWarmup   3: 1 op, 200.00 ns, 200.0000 ns/op
+OverheadWarmup   4: 1 op, 300.00 ns, 300.0000 ns/op
+OverheadWarmup   5: 1 op, 200.00 ns, 200.0000 ns/op
+OverheadWarmup   6: 1 op, 200.00 ns, 200.0000 ns/op
+
+// BeforeActualRun
+WorkloadActual   1: 1 op, 626973900.00 ns, 626.9739 ms/op
+WorkloadActual   2: 1 op, 644483400.00 ns, 644.4834 ms/op
+WorkloadActual   3: 1 op, 619907000.00 ns, 619.9070 ms/op
+WorkloadActual   4: 1 op, 630640700.00 ns, 630.6407 ms/op
+WorkloadActual   5: 1 op, 615652000.00 ns, 615.6520 ms/op
+WorkloadActual   6: 1 op, 621117600.00 ns, 621.1176 ms/op
+WorkloadActual   7: 1 op, 625165200.00 ns, 625.1652 ms/op
+WorkloadActual   8: 1 op, 619954700.00 ns, 619.9547 ms/op
+WorkloadActual   9: 1 op, 616677600.00 ns, 616.6776 ms/op
+WorkloadActual  10: 1 op, 633118800.00 ns, 633.1188 ms/op
+WorkloadActual  11: 1 op, 665565500.00 ns, 665.5655 ms/op
+WorkloadActual  12: 1 op, 630843800.00 ns, 630.8438 ms/op
+WorkloadActual  13: 1 op, 622814400.00 ns, 622.8144 ms/op
+WorkloadActual  14: 1 op, 644842100.00 ns, 644.8421 ms/op
+WorkloadActual  15: 1 op, 633037800.00 ns, 633.0378 ms/op
+
+// AfterActualRun
+WorkloadResult   1: 1 op, 626973900.00 ns, 626.9739 ms/op
+WorkloadResult   2: 1 op, 644483400.00 ns, 644.4834 ms/op
+WorkloadResult   3: 1 op, 619907000.00 ns, 619.9070 ms/op
+WorkloadResult   4: 1 op, 630640700.00 ns, 630.6407 ms/op
+WorkloadResult   5: 1 op, 615652000.00 ns, 615.6520 ms/op
+WorkloadResult   6: 1 op, 621117600.00 ns, 621.1176 ms/op
+WorkloadResult   7: 1 op, 625165200.00 ns, 625.1652 ms/op
+WorkloadResult   8: 1 op, 619954700.00 ns, 619.9547 ms/op
+WorkloadResult   9: 1 op, 616677600.00 ns, 616.6776 ms/op
+WorkloadResult  10: 1 op, 633118800.00 ns, 633.1188 ms/op
+WorkloadResult  11: 1 op, 630843800.00 ns, 630.8438 ms/op
+WorkloadResult  12: 1 op, 622814400.00 ns, 622.8144 ms/op
+WorkloadResult  13: 1 op, 644842100.00 ns, 644.8421 ms/op
+WorkloadResult  14: 1 op, 633037800.00 ns, 633.0378 ms/op
+// GC:  47 46 5 401049752 1
+// Threading:  0 0 1
+
+// AfterAll
+// Benchmark Process 19476 has exited with code 0.
+
+Mean = 627.516 ms, StdErr = 2.473 ms (0.39%), N = 14, StdDev = 9.253 ms
+Min = 615.652 ms, Q1 = 620.245 ms, Median = 626.070 ms, Q3 = 632.489 ms, Max = 644.842 ms
+IQR = 12.244 ms, LowerFence = 601.880 ms, UpperFence = 650.855 ms
+ConfidenceInterval = [617.079 ms; 637.954 ms] (CI 99.9%), Margin = 10.438 ms (1.66% of Mean)
+Skewness = 0.57, Kurtosis = 2.12, MValue = 2
+
+// ** Remained 1 (12.5%) benchmark(s) to run. Estimated finish 2025-09-28 4:20 (0h 0m from now) **
+Setup power plan (GUID: 8c5e7fda-e8bf-4a96-9a85-a6e23a8c635c FriendlyName: High performance)
+// **************************
+// Benchmark: ReadAllowImmutableData.DccmHashlinkNetRead: DefaultJob [ImagePath=C:/Pr(...)T.DAT [67]]
+// *** Execute ***
+// Launch: 1 / 1
+// Execute: dotnet Tomat.Hacksaw.Benchmarks-1.dll --anonymousPipes 1740 1692 --benchmarkName "Tomat.Hacksaw.Benchmarks.Reading.ReadAllowImmutableData.DccmHashlinkNetRead(ImagePath: \"C:/Program Files (x86)/Steam/steamapps/common/Dead Cells/HLBOOT.DAT\")" --job Default --benchmarkId 7 in C:\Users\sgt\cs\repos\gold-meridian\hacksaw\src\Tomat.Hacksaw.Benchmarks\bin\Release\net10.0\Tomat.Hacksaw.Benchmarks-1\bin\Release\net10.0
+// BeforeAnythingElse
+
+// Benchmark Process Environment Information:
+// BenchmarkDotNet v0.15.2
+// Runtime=.NET 10.0.0 (10.0.25.45207), X64 RyuJIT AVX2
+// GC=Concurrent Workstation
+// HardwareIntrinsics=AVX2,AES,BMI1,BMI2,FMA,LZCNT,PCLMUL,POPCNT VectorSize=256
+// Job: DefaultJob
+
+OverheadJitting  1: 1 op, 127900.00 ns, 127.9000 us/op
+WorkloadJitting  1: 1 op, 626014600.00 ns, 626.0146 ms/op
+
+OverheadJitting  2: 1 op, 700.00 ns, 700.0000 ns/op
+WorkloadJitting  2: 1 op, 498514300.00 ns, 498.5143 ms/op
+
+OverheadWarmup   1: 1 op, 1000.00 ns, 1.0000 us/op
+OverheadWarmup   2: 1 op, 300.00 ns, 300.0000 ns/op
+OverheadWarmup   3: 1 op, 300.00 ns, 300.0000 ns/op
+OverheadWarmup   4: 1 op, 200.00 ns, 200.0000 ns/op
+OverheadWarmup   5: 1 op, 300.00 ns, 300.0000 ns/op
+OverheadWarmup   6: 1 op, 200.00 ns, 200.0000 ns/op
+
+// BeforeActualRun
+WorkloadActual   1: 1 op, 517698500.00 ns, 517.6985 ms/op
+WorkloadActual   2: 1 op, 475971500.00 ns, 475.9715 ms/op
+WorkloadActual   3: 1 op, 485327400.00 ns, 485.3274 ms/op
+WorkloadActual   4: 1 op, 490626700.00 ns, 490.6267 ms/op
+WorkloadActual   5: 1 op, 481975200.00 ns, 481.9752 ms/op
+WorkloadActual   6: 1 op, 467267200.00 ns, 467.2672 ms/op
+WorkloadActual   7: 1 op, 467978600.00 ns, 467.9786 ms/op
+WorkloadActual   8: 1 op, 477735300.00 ns, 477.7353 ms/op
+WorkloadActual   9: 1 op, 486293800.00 ns, 486.2938 ms/op
+WorkloadActual  10: 1 op, 485538000.00 ns, 485.5380 ms/op
+WorkloadActual  11: 1 op, 479675600.00 ns, 479.6756 ms/op
+WorkloadActual  12: 1 op, 482974600.00 ns, 482.9746 ms/op
+WorkloadActual  13: 1 op, 527157100.00 ns, 527.1571 ms/op
+WorkloadActual  14: 1 op, 510086600.00 ns, 510.0866 ms/op
+WorkloadActual  15: 1 op, 530754600.00 ns, 530.7546 ms/op
+WorkloadActual  16: 1 op, 495968800.00 ns, 495.9688 ms/op
+WorkloadActual  17: 1 op, 492144800.00 ns, 492.1448 ms/op
+WorkloadActual  18: 1 op, 520038800.00 ns, 520.0388 ms/op
+WorkloadActual  19: 1 op, 497950800.00 ns, 497.9508 ms/op
+WorkloadActual  20: 1 op, 484225300.00 ns, 484.2253 ms/op
+WorkloadActual  21: 1 op, 483237900.00 ns, 483.2379 ms/op
+WorkloadActual  22: 1 op, 500428000.00 ns, 500.4280 ms/op
+WorkloadActual  23: 1 op, 484297200.00 ns, 484.2972 ms/op
+WorkloadActual  24: 1 op, 486441100.00 ns, 486.4411 ms/op
+WorkloadActual  25: 1 op, 482738700.00 ns, 482.7387 ms/op
+WorkloadActual  26: 1 op, 486582400.00 ns, 486.5824 ms/op
+WorkloadActual  27: 1 op, 494661000.00 ns, 494.6610 ms/op
+
+// AfterActualRun
+WorkloadResult   1: 1 op, 517698500.00 ns, 517.6985 ms/op
+WorkloadResult   2: 1 op, 475971500.00 ns, 475.9715 ms/op
+WorkloadResult   3: 1 op, 485327400.00 ns, 485.3274 ms/op
+WorkloadResult   4: 1 op, 490626700.00 ns, 490.6267 ms/op
+WorkloadResult   5: 1 op, 481975200.00 ns, 481.9752 ms/op
+WorkloadResult   6: 1 op, 467267200.00 ns, 467.2672 ms/op
+WorkloadResult   7: 1 op, 467978600.00 ns, 467.9786 ms/op
+WorkloadResult   8: 1 op, 477735300.00 ns, 477.7353 ms/op
+WorkloadResult   9: 1 op, 486293800.00 ns, 486.2938 ms/op
+WorkloadResult  10: 1 op, 485538000.00 ns, 485.5380 ms/op
+WorkloadResult  11: 1 op, 479675600.00 ns, 479.6756 ms/op
+WorkloadResult  12: 1 op, 482974600.00 ns, 482.9746 ms/op
+WorkloadResult  13: 1 op, 510086600.00 ns, 510.0866 ms/op
+WorkloadResult  14: 1 op, 495968800.00 ns, 495.9688 ms/op
+WorkloadResult  15: 1 op, 492144800.00 ns, 492.1448 ms/op
+WorkloadResult  16: 1 op, 497950800.00 ns, 497.9508 ms/op
+WorkloadResult  17: 1 op, 484225300.00 ns, 484.2253 ms/op
+WorkloadResult  18: 1 op, 483237900.00 ns, 483.2379 ms/op
+WorkloadResult  19: 1 op, 500428000.00 ns, 500.4280 ms/op
+WorkloadResult  20: 1 op, 484297200.00 ns, 484.2972 ms/op
+WorkloadResult  21: 1 op, 486441100.00 ns, 486.4411 ms/op
+WorkloadResult  22: 1 op, 482738700.00 ns, 482.7387 ms/op
+WorkloadResult  23: 1 op, 486582400.00 ns, 486.5824 ms/op
+WorkloadResult  24: 1 op, 494661000.00 ns, 494.6610 ms/op
+// GC:  43 24 4 343821472 1
+// Threading:  0 0 1
+
+// AfterAll
+// Benchmark Process 23352 has exited with code 0.
+
+Mean = 487.409 ms, StdErr = 2.353 ms (0.48%), N = 24, StdDev = 11.529 ms
+Min = 467.267 ms, Q1 = 482.548 ms, Median = 485.433 ms, Q3 = 492.774 ms, Max = 517.698 ms
+IQR = 10.226 ms, LowerFence = 467.209 ms, UpperFence = 508.113 ms
+ConfidenceInterval = [478.542 ms; 496.276 ms] (CI 99.9%), Margin = 8.867 ms (1.82% of Mean)
+Skewness = 0.68, Kurtosis = 3.52, MValue = 2
+
+// ** Remained 0 (0.0%) benchmark(s) to run. Estimated finish 2025-09-28 4:20 (0h 0m from now) **
+Successfully reverted power plan (GUID: 381b4222-f694-41f0-9685-ff5bb260df2e FriendlyName: Balanced)
+// ***** BenchmarkRunner: Finish  *****
+
+// * Export *
+  BenchmarkDotNet.Artifacts\results\Tomat.Hacksaw.Benchmarks.Reading.ReadAllowImmutableData-report.csv
+  BenchmarkDotNet.Artifacts\results\Tomat.Hacksaw.Benchmarks.Reading.ReadAllowImmutableData-report-github.md
+  BenchmarkDotNet.Artifacts\results\Tomat.Hacksaw.Benchmarks.Reading.ReadAllowImmutableData-report.html
+
+// * Detailed results *
+ReadAllowImmutableData.HacksawRead: DefaultJob [ImagePath=binaries/hello.hl]
+Runtime = .NET 10.0.0 (10.0.25.45207), X64 RyuJIT AVX2; GC = Concurrent Workstation
+Mean = 202.474 μs, StdErr = 0.730 μs (0.36%), N = 15, StdDev = 2.826 μs
+Min = 200.066 μs, Q1 = 200.338 μs, Median = 200.899 μs, Q3 = 204.063 μs, Max = 208.365 μs
+IQR = 3.726 μs, LowerFence = 194.750 μs, UpperFence = 209.652 μs
+ConfidenceInterval = [199.452 μs; 205.495 μs] (CI 99.9%), Margin = 3.022 μs (1.49% of Mean)
+Skewness = 0.83, Kurtosis = 2.17, MValue = 2
+-------------------- Histogram --------------------
+[198.562 μs ; 202.632 μs) | @@@@@@@@@
+[202.632 μs ; 209.870 μs) | @@@@@@
+---------------------------------------------------
+
+ReadAllowImmutableData.HacksawReadSlim: DefaultJob [ImagePath=binaries/hello.hl]
+Runtime = .NET 10.0.0 (10.0.25.45207), X64 RyuJIT AVX2; GC = Concurrent Workstation
+Mean = 206.822 μs, StdErr = 0.973 μs (0.47%), N = 17, StdDev = 4.013 μs
+Min = 202.309 μs, Q1 = 204.329 μs, Median = 204.518 μs, Q3 = 209.740 μs, Max = 214.258 μs
+IQR = 5.411 μs, LowerFence = 196.212 μs, UpperFence = 217.856 μs
+ConfidenceInterval = [202.914 μs; 210.730 μs] (CI 99.9%), Margin = 3.908 μs (1.89% of Mean)
+Skewness = 0.62, Kurtosis = 1.73, MValue = 2
+-------------------- Histogram --------------------
+[201.445 μs ; 209.127 μs) | @@@@@@@@@@@
+[209.127 μs ; 216.306 μs) | @@@@@@
+---------------------------------------------------
+
+ReadAllowImmutableData.HaxelinkRead: DefaultJob [ImagePath=binaries/hello.hl]
+Runtime = .NET 10.0.0 (10.0.25.45207), X64 RyuJIT AVX2; GC = Concurrent Workstation
+Mean = 301.207 μs, StdErr = 0.943 μs (0.31%), N = 13, StdDev = 3.399 μs
+Min = 294.806 μs, Q1 = 299.371 μs, Median = 299.902 μs, Q3 = 303.774 μs, Max = 307.733 μs
+IQR = 4.403 μs, LowerFence = 292.766 μs, UpperFence = 310.379 μs
+ConfidenceInterval = [297.137 μs; 305.277 μs] (CI 99.9%), Margin = 4.070 μs (1.35% of Mean)
+Skewness = 0.14, Kurtosis = 2.24, MValue = 2
+-------------------- Histogram --------------------
+[292.909 μs ; 302.722 μs) | @@@@@@@@
+[302.722 μs ; 309.630 μs) | @@@@@
+---------------------------------------------------
+
+ReadAllowImmutableData.DccmHashlinkNetRead: DefaultJob [ImagePath=binaries/hello.hl]
+Runtime = .NET 10.0.0 (10.0.25.45207), X64 RyuJIT AVX2; GC = Concurrent Workstation
+Mean = 347.500 μs, StdErr = 1.764 μs (0.51%), N = 21, StdDev = 8.085 μs
+Min = 327.233 μs, Q1 = 345.947 μs, Median = 347.628 μs, Q3 = 350.381 μs, Max = 359.186 μs
+IQR = 4.434 μs, LowerFence = 339.297 μs, UpperFence = 357.031 μs
+ConfidenceInterval = [340.708 μs; 354.291 μs] (CI 99.9%), Margin = 6.791 μs (1.95% of Mean)
+Skewness = -0.9, Kurtosis = 3.86, MValue = 2
+-------------------- Histogram --------------------
+[323.387 μs ; 331.847 μs) | @@
+[331.847 μs ; 342.945 μs) | 
+[342.945 μs ; 352.833 μs) | @@@@@@@@@@@@@@
+[352.833 μs ; 360.525 μs) | @@@@@
+---------------------------------------------------
+
+ReadAllowImmutableData.HacksawRead: DefaultJob [ImagePath=C:/Pr(...)T.DAT [67]]
+Runtime = .NET 10.0.0 (10.0.25.45207), X64 RyuJIT AVX2; GC = Concurrent Workstation
+Mean = 197.872 ms, StdErr = 0.837 ms (0.42%), N = 14, StdDev = 3.131 ms
+Min = 194.239 ms, Q1 = 195.501 ms, Median = 197.671 ms, Q3 = 199.173 ms, Max = 204.157 ms
+IQR = 3.673 ms, LowerFence = 189.991 ms, UpperFence = 204.683 ms
+ConfidenceInterval = [194.340 ms; 201.404 ms] (CI 99.9%), Margin = 3.532 ms (1.79% of Mean)
+Skewness = 0.64, Kurtosis = 2.11, MValue = 2
+-------------------- Histogram --------------------
+[192.534 ms ; 198.560 ms) | @@@@@@@@@@
+[198.560 ms ; 204.715 ms) | @@@@
+---------------------------------------------------
+
+ReadAllowImmutableData.HacksawReadSlim: DefaultJob [ImagePath=C:/Pr(...)T.DAT [67]]
+Runtime = .NET 10.0.0 (10.0.25.45207), X64 RyuJIT AVX2; GC = Concurrent Workstation
+Mean = 149.808 ms, StdErr = 0.458 ms (0.31%), N = 13, StdDev = 1.650 ms
+Min = 146.677 ms, Q1 = 149.015 ms, Median = 149.826 ms, Q3 = 150.583 ms, Max = 153.246 ms
+IQR = 1.568 ms, LowerFence = 146.663 ms, UpperFence = 152.934 ms
+ConfidenceInterval = [147.833 ms; 151.784 ms] (CI 99.9%), Margin = 1.976 ms (1.32% of Mean)
+Skewness = 0.13, Kurtosis = 2.71, MValue = 2
+-------------------- Histogram --------------------
+[145.756 ms ; 150.923 ms) | @@@@@@@@@@
+[150.923 ms ; 154.167 ms) | @@@
+---------------------------------------------------
+
+ReadAllowImmutableData.HaxelinkRead: DefaultJob [ImagePath=C:/Pr(...)T.DAT [67]]
+Runtime = .NET 10.0.0 (10.0.25.45207), X64 RyuJIT AVX2; GC = Concurrent Workstation
+Mean = 627.516 ms, StdErr = 2.473 ms (0.39%), N = 14, StdDev = 9.253 ms
+Min = 615.652 ms, Q1 = 620.245 ms, Median = 626.070 ms, Q3 = 632.489 ms, Max = 644.842 ms
+IQR = 12.244 ms, LowerFence = 601.880 ms, UpperFence = 650.855 ms
+ConfidenceInterval = [617.079 ms; 637.954 ms] (CI 99.9%), Margin = 10.438 ms (1.66% of Mean)
+Skewness = 0.57, Kurtosis = 2.12, MValue = 2
+-------------------- Histogram --------------------
+[614.205 ms ; 636.347 ms) | @@@@@@@@@@@@
+[636.347 ms ; 649.881 ms) | @@
+---------------------------------------------------
+
+ReadAllowImmutableData.DccmHashlinkNetRead: DefaultJob [ImagePath=C:/Pr(...)T.DAT [67]]
+Runtime = .NET 10.0.0 (10.0.25.45207), X64 RyuJIT AVX2; GC = Concurrent Workstation
+Mean = 487.409 ms, StdErr = 2.353 ms (0.48%), N = 24, StdDev = 11.529 ms
+Min = 467.267 ms, Q1 = 482.548 ms, Median = 485.433 ms, Q3 = 492.774 ms, Max = 517.698 ms
+IQR = 10.226 ms, LowerFence = 467.209 ms, UpperFence = 508.113 ms
+ConfidenceInterval = [478.542 ms; 496.276 ms] (CI 99.9%), Margin = 8.867 ms (1.82% of Mean)
+Skewness = 0.68, Kurtosis = 3.52, MValue = 2
+-------------------- Histogram --------------------
+[466.373 ms ; 476.913 ms) | @@@
+[476.913 ms ; 487.405 ms) | @@@@@@@@@@@@@
+[487.405 ms ; 500.773 ms) | @@@@@@
+[500.773 ms ; 519.139 ms) | @@
+---------------------------------------------------
+
+// * Summary *
+
+BenchmarkDotNet v0.15.2, Windows 11 (10.0.26100.6584/24H2/2024Update/HudsonValley)
+Unknown processor
+.NET SDK 10.0.100-rc.1.25451.107
+  [Host]     : .NET 10.0.0 (10.0.25.45207), X64 RyuJIT AVX2
+  DefaultJob : .NET 10.0.0 (10.0.25.45207), X64 RyuJIT AVX2
+
+
+| Method              | ImagePath            | Mean         | Error        | StdDev       | Ratio | RatioSD | Gen0       | Gen1       | Gen2      | Allocated    | Alloc Ratio |
+|-------------------- |--------------------- |-------------:|-------------:|-------------:|------:|--------:|-----------:|-----------:|----------:|-------------:|------------:|
+| HacksawRead         | binaries/hello.hl    |     202.5 μs |      3.02 μs |      2.83 μs |  0.98 |    0.02 |   333.2520 |   333.2520 |  333.2520 |   1326.65 KB |        1.08 |
+| HacksawReadSlim     | binaries/hello.hl    |     206.8 μs |      3.91 μs |      4.01 μs |  1.00 |    0.03 |   333.2520 |   333.2520 |  333.2520 |   1233.19 KB |        1.00 |
+| HaxelinkRead        | binaries/hello.hl    |     301.2 μs |      4.07 μs |      3.40 μs |  1.46 |    0.03 |   100.5859 |    75.1953 |         - |    824.19 KB |        0.67 |
+| DccmHashlinkNetRead | binaries/hello.hl    |     347.5 μs |      6.79 μs |      8.08 μs |  1.68 |    0.05 |   107.9102 |    78.6133 |         - |    881.63 KB |        0.71 |
+|                     |                      |              |              |              |       |         |            |            |           |              |             |
+| HacksawRead         | C:/Pr(...)T.DAT [67] | 197,872.1 μs |  3,532.21 μs |  3,131.21 μs |  1.32 |    0.02 | 15333.3333 | 15000.0000 | 2000.0000 | 166217.37 KB |        1.38 |
+| HacksawReadSlim     | C:/Pr(...)T.DAT [67] | 149,808.5 μs |  1,975.65 μs |  1,649.76 μs |  1.00 |    0.02 |  9666.6667 |  9333.3333 | 2000.0000 |  120155.9 KB |        1.00 |
+| HaxelinkRead        | C:/Pr(...)T.DAT [67] | 627,516.4 μs | 10,437.66 μs |  9,252.72 μs |  4.19 |    0.07 | 47000.0000 | 46000.0000 | 5000.0000 | 391650.15 KB |        3.26 |
+| DccmHashlinkNetRead | C:/Pr(...)T.DAT [67] | 487,409.4 μs |  8,866.88 μs | 11,529.44 μs |  3.25 |    0.08 | 43000.0000 | 24000.0000 | 4000.0000 | 335763.16 KB |        2.79 |
+
+// * Hints *
+Outliers
+  ReadAllowImmutableData.HaxelinkRead: Default        -> 2 outliers were removed (313.40 μs, 316.40 μs)
+  ReadAllowImmutableData.DccmHashlinkNetRead: Default -> 1 outlier  was  removed, 3 outliers were detected (327.23 μs, 328.77 μs, 377.48 μs)
+  ReadAllowImmutableData.HacksawRead: Default         -> 1 outlier  was  removed (220.02 ms)
+  ReadAllowImmutableData.HacksawReadSlim: Default     -> 2 outliers were removed (155.44 ms, 160.76 ms)
+  ReadAllowImmutableData.HaxelinkRead: Default        -> 1 outlier  was  removed (665.57 ms)
+  ReadAllowImmutableData.DccmHashlinkNetRead: Default -> 3 outliers were removed (520.04 ms..530.75 ms)
+
+// * Legends *
+  ImagePath   : Value of the 'ImagePath' parameter
+  Mean        : Arithmetic mean of all measurements
+  Error       : Half of 99.9% confidence interval
+  StdDev      : Standard deviation of all measurements
+  Ratio       : Mean of the ratio distribution ([Current]/[Baseline])
+  RatioSD     : Standard deviation of the ratio distribution ([Current]/[Baseline])
+  Gen0        : GC Generation 0 collects per 1000 operations
+  Gen1        : GC Generation 1 collects per 1000 operations
+  Gen2        : GC Generation 2 collects per 1000 operations
+  Allocated   : Allocated memory per single operation (managed only, inclusive, 1KB = 1024B)
+  Alloc Ratio : Allocated memory ratio distribution ([Current]/[Baseline])
+  1 μs        : 1 Microsecond (0.000001 sec)
+
+// * Diagnostic Output - MemoryDiagnoser *
+
+
+// ***** BenchmarkRunner: End *****
+Run time: 00:01:54 (114.1 sec), executed benchmarks: 8
+
+Global total time: 00:02:09 (129.72 sec), executed benchmarks: 8
+// * Artifacts cleanup *
+Artifacts cleanup is finished

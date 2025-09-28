@@ -45,7 +45,7 @@ public sealed class ListPool<THandle, TElement> : IPool<THandle, TElement>
 
     public THandle AddItem(TElement item)
     {
-        var handle = THandle.DangerouslyCreateHandleForPool(list.Count);
+        var handle = THandle.From(list.Count);
         list.Add(item);
         return handle;
     }
