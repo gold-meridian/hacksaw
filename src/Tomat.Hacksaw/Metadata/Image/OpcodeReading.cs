@@ -8,7 +8,7 @@ using Tomat.Hacksaw.IO;
 
 namespace Tomat.Hacksaw.Metadata.Image;
 
-internal static class OpcodeReading
+public static class OpcodeReading
 {
     private static readonly sbyte[] argument_counts = new sbyte[256];
 
@@ -35,7 +35,7 @@ internal static class OpcodeReading
         return variable_length_table[(int)kind];
     }
 
-    public static ImageOpcode ReadOpcode<TByteReader>(ref TByteReader reader)
+    public static ImageOpcode ReadOpcode<TByteReader>(ref TByteReader reader, HlImage.ReadSettings settings)
         where TByteReader : IByteReader, allows ref struct
     {
         var kindValue = reader.ReadUIndex();
@@ -51,28 +51,28 @@ internal static class OpcodeReading
 
         if (argCount >= 0)
         {
-            return ReadFixedSizeOpcode(ref reader, kind, argCount);
+            return ReadFixedSizeOpcode(ref reader, kind, argCount, settings.OpcodePoolAllocator);
         }
 
         if (IsVariableLength(kind))
         {
-            return ReadVariableLengthOpcode(ref reader, kind);
+            return ReadVariableLengthOpcode(ref reader, kind, settings.OpcodePoolAllocator);
         }
 
         if (kind == HlOpcodeKind.Switch)
         {
-            return ReadSwitchOpcode(ref reader);
+            return ReadSwitchOpcode(ref reader, settings.OpcodePoolAllocator);
         }
 
         ThrowInvalidVariableLength(kind);
         return default(ImageOpcode);
     }
 
-    private static ImageOpcode ReadFixedSizeOpcode<TByteReader>(ref TByteReader reader, HlOpcodeKind kind, int argCount)
+    private static ImageOpcode ReadFixedSizeOpcode<TByteReader>(ref TByteReader reader, HlOpcodeKind kind, int argCount, PooledArrayAllocator<int> allocator)
         where TByteReader : IByteReader, allows ref struct
     {
         var totalSize = argCount + 1;
-        var data = AllocBytes(totalSize);
+        var data = allocator.Allocate(totalSize);
         var pData = data.Span;
         {
             pData[0] = (int)kind;
@@ -109,7 +109,7 @@ internal static class OpcodeReading
         return CreateOpcode(data);
     }
 
-    private static ImageOpcode ReadVariableLengthOpcode<TByteReader>(ref TByteReader reader, HlOpcodeKind kind)
+    private static ImageOpcode ReadVariableLengthOpcode<TByteReader>(ref TByteReader reader, HlOpcodeKind kind, PooledArrayAllocator<int> allocator)
         where TByteReader : IByteReader, allows ref struct
     {
         var p1 = reader.ReadIndex();
@@ -117,7 +117,7 @@ internal static class OpcodeReading
         var p3 = (int)reader.ReadByte();
 
         var totalSize = p3 + 4;
-        var data = AllocBytes(totalSize);
+        var data = allocator.Allocate(totalSize);
         var pData = data.Span;
         {
             pData[0] = (int)kind;
@@ -134,14 +134,14 @@ internal static class OpcodeReading
         return CreateOpcode(data);
     }
 
-    private static ImageOpcode ReadSwitchOpcode<TByteReader>(ref TByteReader reader)
+    private static ImageOpcode ReadSwitchOpcode<TByteReader>(ref TByteReader reader, PooledArrayAllocator<int> allocator)
         where TByteReader : IByteReader, allows ref struct
     {
         var p1 = (int)reader.ReadUIndex();
         var p2 = (int)reader.ReadUIndex();
 
         var totalSize = p2 + 4;
-        var data = AllocBytes(totalSize);
+        var data = allocator.Allocate(totalSize);
         var pData = data.Span;
         {
             pData[0] = (int)HlOpcodeKind.Switch;
@@ -161,33 +161,6 @@ internal static class OpcodeReading
 
         return CreateOpcode(data);
     }
-
-    private const int pool_size = 1024;
-    private static int[] pool = new int[pool_size];
-    private static int pool_index;
-    
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static Memory<int> AllocBytes(int size)
-    {
-        if (size > pool_size)
-        {
-            return new int[size];
-        }
-
-        if (pool_index + size > pool_size)
-        {
-            pool = new int[pool_size];
-            pool_index = 0;
-        }
-        
-        var bytes = pool.AsMemory(pool_index, size);
-        {
-            pool_index += size;
-        }
-
-        return bytes;
-    }
-
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private static ImageOpcode CreateOpcode(Memory<int> data)

@@ -14,8 +14,15 @@ public readonly struct HlImage
 {
     public readonly record struct ReadSettings(
         bool StoreDebugInfo = true,
-        bool StoreFunctionAssigns = true
-    );
+        bool StoreFunctionAssigns = true,
+        // It gets faster the greater the amount, but let's strike a balance between speed and memory consumption.  As
+        // it stands, it's more efficient memory-wise to use this than to allocate for every array since there's
+        // additional data associated with arrays (since they're objects).
+        int OpcodeBytePoolSize = 1 << 18
+    )
+    {
+        internal readonly PooledArrayAllocator<int> OpcodePoolAllocator = new(OpcodeBytePoolSize);
+    }
 
     public required HlHeader Header { get; init; }
 
@@ -251,7 +258,7 @@ public readonly struct HlImage
         var functions = new ImageFunction[functionCount];
         for (var i = 0; i < functionCount; i++)
         {
-            var function = ReadFunction(ref reader);
+            var function = ReadFunction(ref reader, settings);
 
             if (debug)
             {
@@ -518,7 +525,7 @@ public readonly struct HlImage
         }
     }
 
-    private static ImageFunction ReadFunction<TByteReader>(ref TByteReader reader)
+    private static ImageFunction ReadFunction<TByteReader>(ref TByteReader reader, ReadSettings settings)
         where TByteReader : IByteReader, allows ref struct
     {
         var type = TypeHandle.From(reader.ReadIndex());
@@ -534,7 +541,7 @@ public readonly struct HlImage
         var opcodes = new ImageOpcode[opcodeCount];
         for (var i = 0; i < opcodeCount; i++)
         {
-            opcodes[i] = OpcodeReading.ReadOpcode(ref reader);
+            opcodes[i] = OpcodeReading.ReadOpcode(ref reader, settings);
         }
 
         return new ImageFunction(
